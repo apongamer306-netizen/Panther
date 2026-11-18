@@ -15,7 +15,7 @@ header{position:sticky;top:0;z-index:20;background:var(--hd);backdrop-filter:blu
 .brand{display:flex;align-items:center;gap:10px;flex:none}
 .brand img{width:36px;height:36px;border-radius:10px;box-shadow:0 0 0 1px var(--line),0 0 18px var(--glow)}
 .logo{font:600 26px Oswald,Impact,sans-serif;letter-spacing:2px;background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
-#q{flex:1;max-width:440px;margin-left:auto;background:var(--card);border:1px solid var(--line);color:var(--tx);padding:10px 16px;border-radius:99px;outline:0;transition:border-color .2s,box-shadow .2s}
+#q{flex:1;max-width:440px;margin-right:auto;background:var(--card);border:1px solid var(--line);color:var(--tx);padding:10px 16px;border-radius:99px;outline:0;transition:border-color .2s,box-shadow .2s}
 #q:focus{border-color:var(--ac);box-shadow:0 0 0 4px var(--glow)}
 button{font:inherit;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#111;border:0;border-radius:99px;padding:9px 18px;font-weight:600;cursor:pointer;transition:transform .15s,box-shadow .2s,filter .2s}
 button:hover{transform:translateY(-1px);box-shadow:0 6px 20px var(--glow)}button:active{transform:scale(.97)}
@@ -55,7 +55,7 @@ h2::before{content:"";width:4px;height:22px;border-radius:2px;background:linear-
 .bd{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}.box iframe{width:100%;aspect-ratio:16/9;border:0;display:block}
 .in{padding:22px 26px 28px}.in h1{font:600 32px Oswald,Impact,sans-serif;margin:0 0 4px}.meta{color:var(--mut);margin-bottom:12px}
 .btns{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.wh{color:var(--mut)}.wh a{color:var(--ac)}
-@media(max-width:620px){.top{flex-wrap:wrap}#q{order:3;max-width:none;flex:1 1 100%;margin:0}#rnd{margin-left:auto}.grid{grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:16px 10px}.logo{font-size:22px}h2{font-size:20px}}
+@media(max-width:620px){.top{flex-wrap:wrap}#q{order:4;max-width:none;flex:1 1 100%;margin:0}#rnd{margin-right:auto}.dots{order:1}.brand{order:3;margin-left:auto}.grid{grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:16px 10px}.logo{font-size:22px}h2{font-size:20px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 .pl{--pbg:#05070a;background:var(--pbg);color:var(--tx)}
@@ -77,8 +77,10 @@ kbd{background:var(--card2);border:1px solid var(--line);border-radius:6px;paddi
 
 html[data-theme=light]{--bg:#f3f5f8;--card:#fff;--card2:#e9edf2;--line:#d6dde5;--tx:#121820;--mut:#5a6878;--hd:#f3f5f8d9;--glow:#f0b35a40}
 body{overflow-x:hidden}
-.dots{width:36px;height:36px;padding:0;font-size:20px;line-height:1;flex:none}
-#mn{position:fixed;top:58px;left:4vw;z-index:30;min-width:250px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px;box-shadow:0 20px 60px #0007;opacity:0;visibility:hidden;transform:translateY(-8px) scale(.97);transform-origin:top left;transition:all .2s}
+.dots{width:46px;height:46px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border-radius:14px;flex:none}
+.dots span{display:block;width:22px;height:2.5px;background:var(--ac);border-radius:3px;transition:transform .2s}
+.dots:hover span{background:var(--ac2)}
+#mn{position:fixed;top:68px;left:4vw;z-index:30;min-width:250px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px;box-shadow:0 20px 60px #0007;opacity:0;visibility:hidden;transform:translateY(-8px) scale(.97);transform-origin:top left;transition:all .2s}
 #mn.on{opacity:1;visibility:visible;transform:none}
 .mh{display:flex;gap:10px;align-items:center;padding:8px 10px 12px;border-bottom:1px solid var(--line);margin-bottom:6px}.mh small{display:block;color:var(--mut);font-size:12px}
 .av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#111;font-weight:700;display:flex;align-items:center;justify-content:center;object-fit:cover;flex:none}
@@ -87,7 +89,6 @@ body{overflow-x:hidden}
 #sht{position:fixed;inset:0;z-index:90;background:#0009;display:flex;align-items:flex-end;justify-content:center;animation:fd .25s both}
 @keyframes fd{from{opacity:0}}@keyframes su{from{transform:translateY(100%)}}
 .sb{width:100%;max-width:520px;background:var(--card);border:1px solid var(--line);border-bottom:0;border-radius:22px 22px 0 0;padding:24px 24px 30px;animation:su .35s cubic-bezier(.2,.8,.2,1) both}
-.sb{max-height:92vh;overflow:auto}.ur{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}.ur small{color:var(--mut)}.ur button{padding:5px 12px}
 .sb h3{margin:0 0 8px;font:500 22px Oswald,sans-serif}.sb p{color:var(--mut);margin:0 0 14px}.sb .btns{margin:6px 0 0}
 .opt{display:flex;gap:12px;width:100%;text-align:left;background:var(--card2);color:var(--tx);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;box-shadow:none}
 .opt.on,.opt:hover{border-color:var(--ac);transform:none;box-shadow:none}
@@ -110,8 +111,12 @@ body{overflow-x:hidden}
 @keyframes dr{to{stroke-dashoffset:0}}
 </style></head><body>
 <header>
-<div class="top"><div class="brand"><img src="icon-192.png" alt=""><span class="logo">PANTHER</span><button class="g dots" id="dots" aria-label="Menu" aria-haspopup="true">⋮</button></div>
-<input id="q" type="search" placeholder="Search movies, series, anime" aria-label="Search"><button class="g" id="rnd">Surprise me</button></div>
+<div class="top">
+  <button class="g dots" id="dots" aria-label="Menu" aria-haspopup="true"><span></span><span></span><span></span></button>
+  <button class="g" id="rnd">Surprise me</button>
+  <input id="q" type="search" placeholder="Search movies, series, anime" aria-label="Search">
+  <div class="brand"><img src="icon-192.png" alt=""><span class="logo">PANTHER</span></div>
+</div>
 <nav class="tabs" id="tabs"></nav><div class="subs" id="subs" style="display:none"></div>
 </header>
 <main><h2 id="ttl"></h2><div class="grid" id="grid"></div><div id="more"></div></main>
@@ -213,7 +218,7 @@ function startPl(d,t,i){P.d=d;P.ty=t;P.all=(d.videos?.results||[]).filter(v=>v.s
 <select id="vl" title="Video language">${O([['all','Audio: All'],...langs.map(x=>[x,'Audio: '+(LN[x]||x)])],'all')}</select>
 <select id="qs" title="Quality">${O([['default','Auto'],['hd1080','1080p'],['hd720','720p'],['large','480p'],['medium','360p'],['small','240p']],'default')}</select>
 <select id="rs" title="Speed">${O(RATES.map(x=>[x,x+'x']),1)}</select>
-<label><input type="checkbox" id="aun" checked>Auto-next</label><button class="g" id="th" title="Theme (T)">◐ Theme</button><button class="g" id="fl" title="Fullscreen (F)">⛶</button><button class="g" id="hl" title="Shortcuts (?)">⌨</button><button class="g" id="bk">← Details</button><button class="g" id="cx">✕</button></div>
+<label><input type="checkbox" id="au" checked>Auto-next</label><button class="g" id="th" title="Theme (T)">◐ Theme</button><button class="g" id="fl" title="Fullscreen (F)">⛶</button><button class="g" id="hl" title="Shortcuts (?)">⌨</button><button class="g" id="bk">← Details</button><button class="g" id="cx">✕</button></div>
 <div class="pt" id="pt"></div><div class="pls" id="pls"></div></div>`;
  const g=(id,fn)=>$('#'+id).onclick=fn;
  g('sh',tog);$('#sh').ondblclick=fs;g('pp',tog);g('pv',()=>go(-1));g('nx',()=>go(1));g('mu',mute);g('ccb',cc);g('th',theme);g('fl',fs);g('hl',help);g('cx',close);
@@ -224,7 +229,7 @@ function startPl(d,t,i){P.d=d;P.ty=t;P.all=(d.videos?.results||[]).filter(v=>v.s
  $('#vl').onchange=e=>{P.vl=e.target.value;P.list=P.vl==='all'?P.all:P.all.filter(v=>(v.iso_639_1||'null')===P.vl);P.i=0;e.target.blur();mk(0)};
  $('#qs').onchange=e=>{P.q=e.target.value;P.yt.setPlaybackQuality(P.q);e.target.blur()};
  $('#rs').onchange=e=>{P.rate=+e.target.value;P.yt.setPlaybackRate(P.rate);e.target.blur()};
- $('#aun').onchange=e=>{P.auto=e.target.checked};
+ $('#au').onchange=e=>{P.auto=e.target.checked};
  $('#pls').onclick=e=>{const b=e.target.closest('.it');if(b){P.i=+b.dataset.k;mk(0)}};
  $('#pt').textContent='Loading player...';
  loadYT().then(()=>mk(0)).catch(()=>{$('#pt').textContent='Player could not load. Check your internet connection.'})}
@@ -251,7 +256,7 @@ function plKey(e){const k=e.key,tg=e.target;if(tg.tagName==='INPUT'&&tg.type==='
  if(k==='Escape'&&$('#sht')){closeSheet();return 1}if($('#hp')){if(k==='Escape')$('#hp').remove();return 1}
  if(!P.on||!P.yt||!P.yt.getPlayerState||tg.tagName==='SELECT')return 0;
  const y=P.yt,K=k.toLowerCase();let h=1;
- if(k===' '||K==='k')tog();else if(K==='j')skip(-10);else if(K==='l')skip(10);else if(k==='ArrowLeft')skip(-5);else if(k==='ArrowRight')skip(5);else if(k==='ArrowUp')vol(10);else if(k==='ArrowDown')vol(-10);else if(K==='m')mute();else if(K==='f')fs();else if(K==='c')cc();else if(K==='n')go(1);else if(K==='p')go(-1);else if(K==='t')theme();else if(K==='a'){P.auto^=1;$('#aun').checked=!!P.auto}else if(k===',')spd(-1);else if(k==='.')spd(1);else if(/^[0-9]$/.test(k))y.seekTo(y.getDuration()*k/10,true);else h=0;
+ if(k===' '||K==='k')tog();else if(K==='j')skip(-10);else if(K==='l')skip(10);else if(k==='ArrowLeft')skip(-5);else if(k==='ArrowRight')skip(5);else if(k==='ArrowUp')vol(10);else if(k==='ArrowDown')vol(-10);else if(K==='m')mute();else if(K==='f')fs();else if(K==='c')cc();else if(K==='n')go(1);else if(K==='p')go(-1);else if(K==='t')theme();else if(K==='a'){P.auto^=1;$('#au').checked=!!P.auto}else if(k===',')spd(-1);else if(k==='.')spd(1);else if(/^[0-9]$/.test(k))y.seekTo(y.getDuration()*k/10,true);else h=0;
  if(h){e.preventDefault();if(tg.blur)tg.blur()}return h}
 
 const lsg=(k,d)=>{try{return JSON.parse(localStorage[k])}catch{return d}},lss=(k,v)=>{try{localStorage[k]=JSON.stringify(v)}catch{}};
@@ -276,13 +281,11 @@ let dip;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e});
 /* ---- 3-dot menu ---- */
 const GCLIENT='';/* paste your Google OAuth Web Client ID here to enable Google sign-in */
 let U=lsg('pu',null);
-const MENU=[['👤','Profile','prof'],['♡','My list','list'],['◐','Appearance','theme'],['⬇','Install app','inst'],['⌨','Keyboard shortcuts','kbd'],['🗑','Clear my list','clr'],['🛡','Admin panel','adm'],['ℹ','About & privacy','about'],['⎋','Sign out','out']];
+const MENU=[['👤','Profile','prof'],['♡','My list','list'],['◐','Appearance','theme'],['⬇','Install app','inst'],['⌨','Keyboard shortcuts','kbd'],['🗑','Clear my list','clr'],['ℹ','About & privacy','about'],['⎋','Sign out','out']];
 function menuUser(){const u=U||{},n=u.name||'Guest';$('#mn').innerHTML='<div class="mh">'+(u.picture?`<img class="av" src="${esc(u.picture)}" alt="" referrerpolicy="no-referrer">`:`<span class="av">${esc((n[0]||'P').toUpperCase())}</span>`)+`<div><b>${esc(n)}</b><small>${esc(u.email||'')}</small></div></div>`+MENU.map(m=>`<button class="mi" data-k="${m[2]}"><span>${m[0]}</span>${m[1]}</button>`).join('')}
 const X=()=>{$('#sx').onclick=closeSheet};
 const ACT={
-prof:()=>{const u=U||{};sheet(`<h3>Profile</h3><p>${esc(u.email||'')} ${u.verified?'<span class="vb">✓ Verified</span>':''}</p><div class="fld"><label>Full name</label><input id="pn" value="${esc(u.name||'')}"></div><div class="fld"><label>Phone number</label><input id="pph" type="tel" value="${esc(u.phone||'')}" autocomplete="tel"></div><div class="fld"><label>Address</label><input id="pad" value="${esc(u.address||'')}" autocomplete="street-address"></div><div class="fld"><label>Country</label><input id="pct" value="${esc(u.country||'')}" autocomplete="country-name"></div><span class="lc on">@${esc(u.username||'guest')}</span><p class="err" id="er"></p><div class="btns"><button id="ps">Save</button><button class="g" id="sx">Close</button></div>`);X();
- $('#ps').onclick=()=>{const v=id=>$('#'+id).value.trim();if(v('pn').length<2)return $('#er').textContent='Please enter your name.';profSave({name:v('pn'),phone:v('pph'),address:v('pad'),country:v('pct')});closeSheet()}},
-adm:admAsk,
+prof:()=>{const u=U||{};sheet(`<h3>Profile</h3><p>${esc(u.email||'')} ${u.verified?'<span class="vb">✓ Verified by Google</span>':''}</p><span class="lc on">@${esc(u.username||'guest')}</span><span class="lc">${esc(u.country||'—')}</span><div class="btns"><button id="ed">Edit details</button><button class="g" id="sx">Close</button></div>`);X();$('#ed').onclick=()=>{closeSheet();au.classList.remove('out');authForm()}},
 list:()=>pick('mylist'),
 theme:()=>{const m=lsg('pt','dark');sheet('<h3>Appearance</h3>'+[['light','☀ Light'],['system','🖥 System default'],['dark','🌙 Dark']].map(([k,n])=>`<button class="opt${m===k?' on':''}" data-m="${k}">${n}</button>`).join(''));$('#sht').onclick=e=>{const b=e.target.closest('.opt');if(b){lss('pt',b.dataset.m);applyTheme();closeSheet()}else if(e.target.id==='sht')closeSheet()}},
 inst:()=>{if(dip){dip.prompt();dip=null;return}sheet(`<h3>Install Panther</h3><p>${matchMedia('(display-mode:standalone)').matches?'Panther is already installed on this device.':'Chrome: open the browser menu and choose “Install app” (or “Add to Home screen”).<br>iPhone Safari: tap Share, then “Add to Home Screen”.'}</p><button class="g" id="sx">Close</button>`);X()},
@@ -293,99 +296,29 @@ out:()=>{sheet('<h3>Sign out?</h3><p>You will need to sign in with Google again.
 $('#dots').onclick=e=>{e.stopPropagation();$('#mn').classList.toggle('on')};
 document.addEventListener('click',e=>{if(!e.target.closest('#mn'))$('#mn').classList.remove('on')});
 $('#mn').onclick=e=>{const b=e.target.closest('.mi');if(b){$('#mn').classList.remove('on');ACT[b.dataset.k]()}};
-/* ---- accounts, email codes, admin ---- */
-const EJ={svc:'',tpl:'',key:''};/* EmailJS (free, no server): fill these 3 to send real emails. Template variables: {{to_email}} and {{code}} */
+/* ---- sign up ---- */
 const au=$('#au'),step=h=>{au.innerHTML='<div class="ac">'+h+'</div>'};
 const LANGS=[['en','English'],['hi','Hindi'],['bn','Bengali'],['ko','Korean'],['zh','Chinese'],['ja','Japanese'],['ta','Tamil'],['te','Telugu']];
-const accs=()=>lsg('pacc',[]),saveAccs=a=>lss('pacc',a);
-const hex=b=>Array.from(new Uint8Array(b),x=>x.toString(16).padStart(2,'0')).join('');
-const rnd=()=>hex(crypto.getRandomValues(new Uint8Array(12)));
-const sha=async s=>hex(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)));
-const hp=(pw,salt)=>sha(salt+':'+pw);
-let V=null;
-async function sendCode(email){const code=String(100000+crypto.getRandomValues(new Uint32Array(1))[0]%900000);V={email,code,exp:Date.now()+6e5,tries:0,last:Date.now()};
- if(!EJ.key)return code;
- const r=await fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:EJ.svc,template_id:EJ.tpl,user_id:EJ.key,template_params:{to_email:email,code}})});
- if(!r.ok)throw 0;return ''}
-function verifyScreen(email,note,ok,back){
- step(`<div class="ah">Verify your email</div><p class="sub">We sent a 6-digit code to<br><b>${esc(email)}</b></p>${note?`<p class="sub warn">Test mode: your code is <b>${note}</b>. Real emails are not set up yet.</p>`:''}<div class="fld"><input id="vc" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code" style="text-align:center;font-size:24px;letter-spacing:8px"></div><p class="err" id="er"></p><button id="vk" style="width:100%">Verify</button><div class="btns" style="justify-content:space-between"><button class="g" id="vb">← Back</button><button class="g" id="vr">Resend code</button></div>`);
- const er=m=>{$('#er').textContent=m};$('#vc').focus();
- const chk=()=>{const c=$('#vc').value.trim();if(!V||V.email!==email||Date.now()>V.exp)return er('Code expired. Tap “Resend code”.');
-  if(V.tries>=5){V=null;return er('Too many wrong tries. Tap “Resend code”.')}
-  if(c!==V.code){V.tries++;return er('Wrong code. Try again.')}V=null;ok()};
- $('#vk').onclick=chk;$('#vc').onkeydown=e=>{if(e.key==='Enter')chk()};$('#vb').onclick=back;
- $('#vr').onclick=async()=>{if(V&&Date.now()-V.last<3e4)return er('Please wait 30 seconds before resending.');er('Sending...');try{verifyScreen(email,await sendCode(email),ok,back)}catch{er('Could not send the code. Check your connection.')}}}
-function finish(a){U={name:a.name,email:a.email,username:a.username,phone:a.phone||'',address:a.address||'',country:a.country||'',langs:a.langs||['en'],picture:a.picture,verified:1,done:1};lss('pu',U);authDone()}
 function authStart(){au.classList.remove('out');
- step(`<div class="brand" style="justify-content:center"><img src="icon-192.png" alt=""><span class="logo">PANTHER</span></div><div class="ah">Welcome back</div><p class="sub">Log in to continue watching.</p>
-<div class="fld"><label>Email</label><input id="le" type="email" autocomplete="email"></div>
-<div class="fld"><label>Password</label><input id="lp" type="password" autocomplete="current-password"></div><p class="err" id="er"></p>
-<button id="li" style="width:100%">Log in</button>${GCLIENT?'<p class="sub" style="margin:14px 0 8px">or</p><div id="gbtn" class="gb"></div>':''}
-<p class="sub fine">New here? <a href="#" id="su" style="color:var(--ac)">Create account</a></p>`);
- const er=m=>{$('#er').textContent=m};
- $('#su').onclick=e=>{e.preventDefault();signup()};
- const go=async()=>{const em=$('#le').value.trim().toLowerCase(),pw=$('#lp').value;if(!em||!pw)return er('Enter your email and password.');
-  const a=accs().find(x=>x.email===em);if(!a||await hp(pw,a.salt)!==a.hash)return er('Wrong email or password.');
-  er('Sending code...');$('#li').disabled=true;
-  try{verifyScreen(em,await sendCode(em),()=>finish(a),authStart)}catch{er('Could not send the code. Check your connection.');$('#li').disabled=false}};
- $('#li').onclick=go;$('#lp').onkeydown=e=>{if(e.key==='Enter')go()};
- if(GCLIENT)gsi()}
-function signup(){
- step(`<div class="ah">Create account</div><p class="sub">Join Panther in a minute.</p>
-<div class="fld"><label>Full name</label><input id="fn" autocomplete="name"></div>
-<div class="fld"><label>Username</label><input id="un" placeholder="e.g. panther_fan" autocomplete="username"></div>
-<div class="fld"><label>Email</label><input id="em" type="email" autocomplete="email"></div>
-<div class="fld"><label>Password (min 8 characters)</label><input id="pw" type="password" autocomplete="new-password"></div>
-<div class="fld"><label>Confirm password</label><input id="pw2" type="password" autocomplete="new-password"></div>
-<div class="fld"><label>Languages you watch in</label><div id="lgs">${LANGS.map(([c,n])=>`<button type="button" class="chip${c==='en'?' on':''}" data-c="${c}">${n}</button>`).join('')}</div></div>
-<label class="tos"><input type="checkbox" id="tos"> I agree to the Terms and Privacy Policy</label><p class="err" id="er"></p><button id="go" style="width:100%">Send verification code</button>
-<p class="sub fine">Already have an account? <a href="#" id="bl" style="color:var(--ac)">Log in</a></p>`);
- $('#lgs').onclick=e=>{const b=e.target.closest('.chip');if(b)b.classList.toggle('on')};
- $('#bl').onclick=e=>{e.preventDefault();authStart()};
- const er=m=>{$('#er').textContent=m},v=id=>$('#'+id).value.trim();
- $('#go').onclick=async()=>{const em=v('em').toLowerCase(),un=v('un'),pw=$('#pw').value;
-  if(v('fn').length<2)return er('Please enter your full name.');
-  if(!/^[a-z0-9_]{3,20}$/i.test(un))return er('Username: 3–20 letters, numbers or _.');
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))return er('Please enter a valid email.');
-  if(pw.length<8)return er('Password must be at least 8 characters.');
-  if(pw!==$('#pw2').value)return er('Passwords do not match.');
-  if(!$('#tos').checked)return er('Please accept the Terms to continue.');
-  const all=accs();if(all.some(x=>x.email===em))return er('An account with this email already exists. Log in instead.');
-  if(all.some(x=>x.username.toLowerCase()===un.toLowerCase()))return er('That username is taken.');
-  $('#go').disabled=true;er('Sending code...');
-  const salt=rnd(),a={name:v('fn'),username:un,email:em,salt,hash:await hp(pw,salt),langs:[...document.querySelectorAll('#lgs .chip.on')].map(b=>b.dataset.c),created:Date.now()};
-  try{verifyScreen(em,await sendCode(em),()=>{const l=accs();l.push(a);saveAccs(l);finish(a)},signup)}catch{er('Could not send the code. Check your connection.');$('#go').disabled=false}}}
+ step(`<div class="brand" style="justify-content:center"><img src="icon-192.png" alt=""><span class="logo">PANTHER</span></div><div class="ah">Welcome</div><p class="sub">Sign up with your Google account to start watching.</p>${GCLIENT?'<div id="gbtn" class="gb"></div>':'<p class="sub warn">Google sign-in is not set up yet. Add your Client ID to GCLIENT in index.html.</p><button id="tst" style="width:100%">Continue in test mode</button>'}<p class="sub fine">By continuing you agree to our Terms and Privacy Policy.</p>`);
+ if(GCLIENT)gsi();else $('#tst').onclick=()=>{U={name:'Test User',email:'test@example.com',verified:0};lss('pu',U);authForm()}}
 function gsi(){const go=()=>{google.accounts.id.initialize({client_id:GCLIENT,callback:r=>{let p;try{p=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(r.credential.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0))))}catch{return}
- if(!p.email_verified)return;const a=accs().find(x=>x.email===p.email.toLowerCase());if(a)return finish({...a,picture:p.picture});
- U={name:p.name,email:p.email.toLowerCase(),picture:p.picture,verified:1};lss('pu',U);googleForm()}});google.accounts.id.renderButton($('#gbtn'),{theme:'filled_black',size:'large',shape:'pill',width:280})};
+ if(!p.email_verified)return;U={...(U&&U.email===p.email?U:{}),name:p.name,email:p.email,picture:p.picture,verified:1};lss('pu',U);U.done?authDone():authForm()}});google.accounts.id.renderButton($('#gbtn'),{theme:'filled_black',size:'large',shape:'pill',width:280})};
  if(window.google&&google.accounts)return go();const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=1;s.onload=go;s.onerror=()=>{$('#gbtn').textContent='Could not load Google sign-in. Check your connection.'};document.head.appendChild(s)}
-function googleForm(){const u=U;step(`<div class="ah">Finish your account</div><p class="sub"><span class="vb">✓ Email verified by Google</span><br>${esc(u.email)}</p>
-<div class="fld"><label>Full name</label><input id="fn" value="${esc(u.name||'')}"></div>
-<div class="fld"><label>Username</label><input id="un" placeholder="e.g. panther_fan"></div>
-<div class="fld"><label>Languages you watch in</label><div id="lgs">${LANGS.map(([c,n])=>`<button type="button" class="chip${c==='en'?' on':''}" data-c="${c}">${n}</button>`).join('')}</div></div>
+function authForm(){const u=U;step(`<div class="ah">Create your account</div><p class="sub">${u.verified?'<span class="vb">✓ Email verified by Google</span><br>':''}${esc(u.email)}</p>
+<div class="fld"><label>Full name</label><input id="fn" value="${esc(u.name||'')}" autocomplete="name"></div>
+<div class="fld"><label>Username</label><input id="un" value="${esc(u.username||'')}" placeholder="e.g. panther_fan" autocomplete="username"></div>
+<div class="fld"><label>Country</label><input id="ct" value="${esc(u.country||'')}" autocomplete="country-name"></div>
+<div class="fld"><label>Date of birth</label><input id="db" type="date" value="${esc(u.dob||'')}" max="${today}"></div>
+<div class="fld"><label>Languages you watch in</label><div id="lgs">${LANGS.map(([c,n])=>`<button type="button" class="chip${(u.langs||['en']).includes(c)?' on':''}" data-c="${c}">${n}</button>`).join('')}</div></div>
 <label class="tos"><input type="checkbox" id="tos"> I agree to the Terms and Privacy Policy</label><p class="err" id="er"></p><button id="go" style="width:100%">Create account</button>`);
  $('#lgs').onclick=e=>{const b=e.target.closest('.chip');if(b)b.classList.toggle('on')};
  $('#go').onclick=()=>{const v=id=>$('#'+id).value.trim(),er=m=>{$('#er').textContent=m};
-  if(v('fn').length<2)return er('Please enter your full name.');if(!/^[a-z0-9_]{3,20}$/i.test(v('un')))return er('Username: 3–20 letters, numbers or _.');
-  if(accs().some(x=>x.username.toLowerCase()===v('un').toLowerCase()))return er('That username is taken.');if(!$('#tos').checked)return er('Please accept the Terms to continue.');
-  const a={name:v('fn'),username:v('un'),email:u.email,salt:'',hash:'',google:1,picture:u.picture,langs:[...document.querySelectorAll('#lgs .chip.on')].map(b=>b.dataset.c),created:Date.now()};
-  const l=accs();l.push(a);saveAccs(l);finish(a)}}
+  if(v('fn').length<2)return er('Please enter your full name.');if(!/^[a-z0-9_]{3,20}$/i.test(v('un')))return er('Username: 3–20 letters, numbers or _.');if(v('ct').length<2)return er('Please enter your country.');if(!v('db'))return er('Please enter your date of birth.');if(new Date(v('db'))>new Date(Date.now()-13*31557600000))return er('You must be at least 13 years old.');if(!$('#tos').checked)return er('Please accept the Terms to continue.');
+  U={...U,name:v('fn'),username:v('un'),country:v('ct'),dob:v('db'),langs:[...document.querySelectorAll('#lgs .chip.on')].map(b=>b.dataset.c),done:1};lss('pu',U);authDone()}}
 function authDone(){step(`<svg class="ck" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M14 27l8 8 16-17"/></svg><div class="ah">You’re all in, ${esc((U.name||'').split(' ')[0])}!</div><p class="sub">Account ready. Opening Panther...</p>`);menuUser();setTimeout(()=>au.classList.add('out'),1500)}
-/* profile */
-function profSave(p){U={...U,...p};lss('pu',U);const l=accs(),a=l.find(x=>x.email===U.email);if(a){Object.assign(a,p);saveAccs(l)}menuUser()}
-/* admin */
-const adm=()=>lsg('pa',null);
-async function admAsk(){const set=!adm();
- sheet(`<h3>${set?'Create admin password':'Admin panel'}</h3><p>${set?'Choose a password (min 6 characters). It is stored on this device only.':'Enter the admin password.'}</p><div class="fld"><input id="ap" type="password" placeholder="Password" autocomplete="off"></div>${set?'<div class="fld"><input id="ap2" type="password" placeholder="Repeat password" autocomplete="off"></div>':''}<p class="err" id="er"></p><div class="btns"><button class="g" id="sx">Cancel</button><button id="ok">${set?'Save':'Open'}</button></div>`);X();
- $('#ok').onclick=async()=>{const pw=$('#ap').value,er=m=>{$('#er').textContent=m};
-  if(set){if(pw.length<6)return er('At least 6 characters.');if(pw!==$('#ap2').value)return er('Passwords do not match.');const s=rnd();lss('pa',{s,h:await hp(pw,s)});admPanel()}
-  else{const a=adm();if(await hp(pw,a.s)!==a.h)return er('Wrong password.');admPanel()}}}
-function admPanel(){const l=accs();
- sheet(`<h3>Admin panel</h3><p>${l.length} user${l.length===1?'':'s'} · ${l.filter(x=>!x.google).length} email · ${l.filter(x=>x.google).length} Google · ${wl().length} saved titles. Data shown is stored on this device only.</p><div id="ul">${l.map(x=>`<div class="ur"><span><b>${esc(x.name)}</b> @${esc(x.username)}<br><small>${esc(x.email)}${x.phone?' · '+esc(x.phone):''}</small></span><button class="g" data-e="${esc(x.email)}">Delete</button></div>`).join('')||'<p>No users yet.</p>'}</div><div class="btns"><button class="g" id="cp">Change password</button><button id="sx">Close</button></div>`);X();
- $('#cp').onclick=()=>{try{localStorage.removeItem('pa')}catch{}admAsk()};
- $('#ul').onclick=e=>{const b=e.target.closest('[data-e]');if(!b||!confirm('Delete this user?'))return;saveAccs(accs().filter(x=>x.email!==b.dataset.e));admPanel()}}
 menuUser();
-if(U&&U.done){au.style.transition='none';au.classList.add('out');au.offsetHeight;au.style.transition=''}else if(U&&U.verified)googleForm();else authStart();
+if(U&&U.done){au.style.transition='none';au.classList.add('out');au.offsetHeight;au.style.transition=''}else if(U)authForm();else authStart();
 pick('trending');
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>

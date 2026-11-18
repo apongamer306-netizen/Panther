@@ -58,6 +58,14 @@ h2::before{content:"";width:4px;height:22px;border-radius:2px;background:linear-
 @media(max-width:620px){.top{flex-wrap:wrap}#q{order:4;max-width:none;flex:1 1 100%;margin:0}#rnd{margin-right:auto}.dots{order:1}.brand{order:3;margin-left:auto}.grid{grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:16px 10px}.logo{font-size:22px}h2{font-size:20px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
+/* CodeSpecters NexStream Embed Styles */
+.stream-wrap{background:#000;border-bottom:1px solid var(--line)}
+.stream-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+.stream-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.ep-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 18px;background:var(--card);border-bottom:1px solid var(--line);font-size:13px}
+.ep-bar select,.ep-bar input{background:var(--card2);color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font:inherit}
+.ep-bar input{width:75px}
+
 .pl{--pbg:#05070a;background:var(--pbg);color:var(--tx)}
 .pl.light{--pbg:#f4f6f9;--tx:#111;--card:#fff;--card2:#e8edf3;--line:#ccd5de;--mut:#556}
 .stage{position:relative;aspect-ratio:16/9;background:#000}.stage iframe,.stage #yt{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -177,6 +185,55 @@ function pick(id,k,keep){cur=TABS.find(t=>t.id===id);sub=k||0;
  $('#q').value='';start(cur.subs?cur.subs[sub][1]:cur.f,cur.label+(cur.subs&&sub?' · '+cur.subs[sub][0]:''))}
 $('#subs').onclick=e=>{const b=e.target.closest('.chip');if(b)pick(cur.id,+b.dataset.k,1)};
 tabsEl.onclick=e=>{const b=e.target.closest('.tab');if(b)pick(b.dataset.id)};
+
+/* ---- CodeSpecters NexStream Streaming Integration ---- */
+const CS_API_KEY = 'nx_0f03baf111747cdbc36f74641c5a472b'; // Your updated API Key
+
+function startStream(d, t, season = 1, episode = 1) {
+  stopPl();
+  const box = $('#box');
+  const title = d.title || d.name;
+  const maxSeasons = d.number_of_seasons || 1;
+  
+  // NexStream API URL structure based on official docs
+  const streamUrl = t === 'movie' 
+    ? `https://api.codespecters.com/embed/movie/${d.id}?apikey=${CS_API_KEY}`
+    : `https://api.codespecters.com/embed/tv/${d.id}/${season}/${episode}?apikey=${CS_API_KEY}`;
+
+  box.innerHTML = `
+    <div class="stream-wrap">
+      <div class="stream-frame">
+        <iframe src="${streamUrl}" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+      </div>
+      ${t === 'tv' ? `
+      <div class="ep-bar">
+        <label>Season: <input type="number" id="st-s" min="1" max="${maxSeasons}" value="${season}"></label>
+        <label>Episode: <input type="number" id="st-e" min="1" max="999" value="${episode}"></label>
+        <button id="st-go" style="padding:6px 14px;font-size:13px">Load Episode</button>
+      </div>` : ''}
+    </div>
+    <div class="in">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h1 style="font-size:24px;margin:0">${esc(title)} ${t === 'tv' ? `(S${season} E${episode})` : ''}</h1>
+        <div style="display:flex;gap:8px">
+          <button class="g" id="bk-det">← Details</button>
+          <button class="g" id="cx-st">✕ Close</button>
+        </div>
+      </div>
+      <p style="color:var(--mut);font-size:13px;margin:10px 0 0">💡 Powered by CodeSpecters NexStream API. Select episodes or switch audio/subtitles directly inside the video player.</p>
+    </div>`;
+
+  $('#cx-st').onclick = close;
+  $('#bk-det').onclick = () => open(d.id, t);
+  if (t === 'tv') {
+    $('#st-go').onclick = () => {
+      const sVal = Math.max(1, +$('#st-s').value || 1);
+      const eVal = Math.max(1, +$('#st-e').value || 1);
+      startStream(d, t, sVal, eVal);
+    };
+  }
+}
+
 async function open(id,t){pushOv();const m=$('#m'),box=$('#box');m.classList.add('on');document.body.style.overflow='hidden';box.innerHTML='<div class="in">Loading...</div>';
 try{const d=await get(`/${t}/${id}`,{append_to_response:'videos,watch/providers',include_video_language:'en,hi,bn,ja,ko,zh,ta,te,ml,kn,null'});
 const title=d.title||d.name,tr=(d.videos?.results||[]).find(v=>v.site==='YouTube'&&v.type==='Trailer')||(d.videos?.results||[])[0];
@@ -186,9 +243,10 @@ const saved=wl().some(x=>x.id==id&&x.type==t);
 box.innerHTML=`${d.backdrop_path?`<img class="bd" src="${IMG}w1280${d.backdrop_path}" alt="">`:''}<div class="in"><h1>${esc(title)}</h1>
 <div class="meta">${(d.release_date||d.first_air_date||'').slice(0,4)} · ★ ${(d.vote_average||0).toFixed(1)} · ${(d.genres||[]).map(g=>esc(g.name)).join(', ')}${d.runtime?' · '+d.runtime+' min':''}${d.number_of_seasons?' · '+d.number_of_seasons+' seasons':''}</div>
 <div>${(d.spoken_languages||[]).some(l=>l.iso_639_1==='hi')?'<span class="lc on">✓ Hindi available</span>':''}${(d.spoken_languages||[]).some(l=>l.iso_639_1==='en')?'<span class="lc on">✓ English available</span>':''}${(d.spoken_languages||[]).map(l=>`<span class="lc">${esc(l.english_name)}</span>`).join('')}</div><p>${esc(d.overview)||'No summary yet.'}</p>
-<div class="btns">${tr?`<button id="tr">▶ Play in app</button>`:''}<button class="g" id="sv">${saved?'Remove from my list':'Add to my list'}</button><button class="g" id="cl">Close</button></div>
-<div class="wh">${names.length?'Streaming on: '+[...new Set(names)].map(esc).join(', ')+(reg.link?` · <a href="${reg.link}" target="_blank" rel="noopener">See all options</a>`:''):'No streaming info for your region yet.'}</div></div>`;
+<div class="btns"><button id="watch-now">🎬 Watch Full ${t==='tv'?'Series':'Movie'}</button>${tr?`<button class="g" id="tr">▶ Watch Trailer</button>`:''}<button class="g" id="sv">${saved?'Remove from my list':'Add to my list'}</button><button class="g" id="cl">Close</button></div>
+<div class="wh">${names.length?'Official platforms: '+[...new Set(names)].map(esc).join(', ')+(reg.link?` · <a href="${reg.link}" target="_blank" rel="noopener">See all options</a>`:''):'Stream ready via NexStream API.'}</div></div>`;
 $('#cl').onclick=close;$('#sv').onclick=()=>{let w=wl();const k=w.findIndex(x=>x.id==id&&x.type==t);k>=0?w.splice(k,1):w.push(norm(d,t));try{localStorage.pw=JSON.stringify(w)}catch{}open(id,t);if(cur.id==='mylist'&&!S.q)start(cur.f,cur.label)};
+$('#watch-now').onclick=()=>startStream(d,t,1,1);
 if(tr)$('#tr').onclick=()=>startPl(d,t,0);
 }catch(e){box.innerHTML='<div class="in">Could not load details. <button id="cl">Close</button></div>';$('#cl').onclick=close}}
 const close=()=>done(),closeM=()=>{stopPl();$('#m').classList.remove('on');document.body.style.overflow='';setTimeout(()=>{if(!$('#m').classList.contains('on'))$('#box').innerHTML=''},300)};
@@ -283,7 +341,7 @@ const GCLIENT='';/* paste your Google OAuth Web Client ID here to enable Google 
 let U=lsg('pu',null);
 const MENU=[['👤','Profile','prof'],['♡','My list','list'],['◐','Appearance','theme'],['⬇','Install app','inst'],['⌨','Keyboard shortcuts','kbd'],['🗑','Clear my list','clr'],['ℹ','About & privacy','about'],['⎋','Sign out','out']];
 function menuUser(){const u=U||{},n=u.name||'Guest';$('#mn').innerHTML='<div class="mh">'+(u.picture?`<img class="av" src="${esc(u.picture)}" alt="" referrerpolicy="no-referrer">`:`<span class="av">${esc((n[0]||'P').toUpperCase())}</span>`)+`<div><b>${esc(n)}</b><small>${esc(u.email||'')}</small></div></div>`+MENU.map(m=>`<button class="mi" data-k="${m[2]}"><span>${m[0]}</span>${m[1]}</button>`).join('')}
-const X=()=>{$('#sx').onclick=closeSheet};
+const X=()=>{$('#sx'.onclick=closeSheet)};
 const ACT={
 prof:()=>{const u=U||{};sheet(`<h3>Profile</h3><p>${esc(u.email||'')} ${u.verified?'<span class="vb">✓ Verified by Google</span>':''}</p><span class="lc on">@${esc(u.username||'guest')}</span><span class="lc">${esc(u.country||'—')}</span><div class="btns"><button id="ed">Edit details</button><button class="g" id="sx">Close</button></div>`);X();$('#ed').onclick=()=>{closeSheet();au.classList.remove('out');authForm()}},
 list:()=>pick('mylist'),
@@ -291,7 +349,7 @@ theme:()=>{const m=lsg('pt','dark');sheet('<h3>Appearance</h3>'+[['light','☀ L
 inst:()=>{if(dip){dip.prompt();dip=null;return}sheet(`<h3>Install Panther</h3><p>${matchMedia('(display-mode:standalone)').matches?'Panther is already installed on this device.':'Chrome: open the browser menu and choose “Install app” (or “Add to Home screen”).<br>iPhone Safari: tap Share, then “Add to Home Screen”.'}</p><button class="g" id="sx">Close</button>`);X()},
 kbd:help,
 clr:()=>{sheet('<h3>Clear my list?</h3><p>This removes all saved titles on this device.</p><div class="btns"><button class="g" id="sx">Cancel</button><button id="ok">Clear</button></div>');X();$('#ok').onclick=()=>{try{localStorage.pw='[]'}catch{}closeSheet();if(cur.id==='mylist')pick('mylist',0,1)}},
-about:()=>{sheet('<h3>About Panther</h3><p>Discover movies, series and anime, watch trailers in the built-in player and save titles to your list. Titles, ratings and images come from TMDB. Panther does not host full movies or episodes. Your profile and list are stored on this device.</p><button class="g" id="sx">Close</button>');X()},
+about:()=>{sheet('<h3>About Panther</h3><p>Discover movies, series and anime, watch full streams or trailers in the built-in player and save titles to your list. Metadata comes from TMDB. Your profile and list are stored on this device.</p><button class="g" id="sx">Close</button>');X()},
 out:()=>{sheet('<h3>Sign out?</h3><p>You will need to sign in with Google again.</p><div class="btns"><button class="g" id="sx">Cancel</button><button id="ok">Sign out</button></div>');X();$('#ok').onclick=()=>{closeSheet();try{localStorage.removeItem('pu')}catch{}U=null;try{google.accounts.id.disableAutoSelect()}catch{}authStart()}}};
 $('#dots').onclick=e=>{e.stopPropagation();$('#mn').classList.toggle('on')};
 document.addEventListener('click',e=>{if(!e.target.closest('#mn'))$('#mn').classList.remove('on')});
@@ -320,5 +378,5 @@ function authDone(){step(`<svg class="ck" viewBox="0 0 52 52"><circle cx="26" cy
 menuUser();
 if(U&&U.done){au.style.transition='none';au.classList.add('out');au.offsetHeight;au.style.transition=''}else if(U)authForm();else authStart();
 pick('trending');
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch({});
 </script></body></html>

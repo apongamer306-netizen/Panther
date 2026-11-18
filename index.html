@@ -131,6 +131,7 @@ const tv=l=>({with_original_language:l,sort_by:'popularity.desc','first_air_date
 const $=s=>document.querySelector(s);
 const get=(p,x={})=>fetch(API+p+'?'+new URLSearchParams({api_key:KEY,language:'en-US',...x})).then(r=>{if(!r.ok)throw 0;return r.json()});
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const lsg=(k,d)=>{try{return JSON.parse(localStorage[k])}catch{return d}},lss=(k,v)=>{try{localStorage[k]=JSON.stringify(v)}catch{}};
 const wl=()=>{try{return JSON.parse(localStorage.pw||'[]')}catch{return[]}};
 const norm=(r,t)=>({id:r.id,type:r.media_type||t||(r.name?'tv':'movie'),title:r.title||r.name,poster:r.poster_path,date:(r.release_date||r.first_air_date||'').slice(0,4),vote:r.vote_average,lang:r.original_language,release_date:r.release_date||r.first_air_date});
 const L=(path,x,t)=>async p=>{const d=await get(path,{...x,page:p});return{items:(d.results||[]).filter(r=>r.poster_path&&r.media_type!=='person').map(r=>norm(r,t)),total:Math.min(d.total_pages||1,50)}};

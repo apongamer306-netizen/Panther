@@ -284,6 +284,10 @@ function go(n){const k=P.i+n;if(k<0||k>=P.list.length)return;P.i=k;mk(0)}
 function tog(){const y=P.yt;if(y&&y.getPlayerState)y.getPlayerState()===1?y.pauseVideo():y.playVideo()}
 function fs(){const e=$('#pl');document.fullscreenElement?document.exitFullscreen():e.requestFullscreen&&e.requestFullscreen()}
 function stopPl(){P.on=0;clearInterval(P.iv);try{P.yt&&P.yt.destroy()}catch{}P.yt=null;if(document.fullscreenElement)document.exitFullscreen()}
+
+function sheet(h){closeSheet();const s=document.createElement('div');s.id='sht';s.innerHTML='<div class="sb">'+h+'</div>';s.onclick=e=>{if(e.target===s)closeSheet()};document.body.appendChild(s)}
+const closeSheet=()=>{const s=$('#sht');s&&s.remove()};
+
 const close=()=>done(),closeM=()=>{stopPl();$('#m').classList.remove('on');document.body.style.overflow='';setTimeout(()=>{if(!$('#m').classList.contains('on'))$('#box').innerHTML=''},300)};
 $('#m').onclick=e=>{if(e.target.id==='m')close()};
 

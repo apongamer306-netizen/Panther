@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -157,7 +158,6 @@ let cur=TABS[0],S=null,pool=[],tok=0;
 tabsEl.innerHTML=TABS.map(t=>`<button class="tab" data-id="${t.id}">${t.label}</button>`).join('');
 const sk=n=>Array.from({length:n},()=>'<div class="c sk"><div class="pw"></div><div class="t"></div></div>').join('');
 
-// Thumbnail card with Play button overlay & Dual Audio / English tag logic
 const card=(i,k)=>{
   const isComingSoon = i.release_date && i.release_date > today;
   const tagText = isComingSoon ? 'Coming Soon' : (['hi','ta','te'].includes(i.lang) ? 'Dual Audio' : 'English');
@@ -196,7 +196,6 @@ function pick(id,k,keep){cur=TABS.find(t=>t.id===id);sub=k||0;
 $('#subs').onclick=e=>{const b=e.target.closest('.chip');if(b)pick(cur.id,+b.dataset.k,1)};
 tabsEl.onclick=e=>{const b=e.target.closest('.tab');if(b)pick(b.dataset.id)};
 
-/* ---- Custom YouTube / Trailer & Direct Player with Multi-Language & Next/Prev ---- */
 const P={on:0,all:[],list:[],i:0,vl:'all',cc:1,ccl:'en',auto:1,dark:1,mu:0,yt:null,iv:0,d:null,ty:'',rate:1,q:'default'};
 const LN={en:'English',hi:'Hindi',bn:'Bengali',ja:'Japanese',ko:'Korean',zh:'Chinese',ta:'Tamil',te:'Telugu',ml:'Malayalam',kn:'Kannada',null:'Other'};
 const RATES=[.5,.75,1,1.25,1.5,2],fmt=s=>{s=Math.floor(s||0);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
@@ -219,9 +218,6 @@ async function openMedia(id, t) {
 
 function startPl(d, t, idx, vids){
   P.d=d; P.ty=t; P.all=vids; P.list=vids; P.i=idx||0; P.on=1;
-  const langs=[...new Set(vids.map(v=>v.iso_639_1||'null'))];
-  const O=(a,sel)=>a.map(([v,n])=>`<option value="${v}"${v==sel?' selected':''}>${n}</option>`).join('');
-
   box.innerHTML=`<div class="pl" id="pl">
     <div class="stage"><div id="yt"></div><div class="sh" id="sh"></div></div>
     <div class="bar"><input type="range" id="sk" min="0" max="1000" value="0" aria-label="Seek"><span id="tm">0:00 / 0:00</span></div>
@@ -260,7 +256,6 @@ function startPl(d, t, idx, vids){
   $('#sub-lang').onchange=e=>{
     P.ccl=e.target.value;
     e.target.blur();
-    if(P.yt&&P.yt.setOption&&P.ccl!=='off'){try{P.yt.setOption('captions','reload')}catch{}}
   };
 
   $('#pls').onclick=e=>{const b=e.target.closest('.it');if(b){P.i=+b.dataset.k;mk(0)}};
@@ -272,7 +267,7 @@ function mk(st){
   const el=document.createElement('div');el.id='yt';$('#pl .stage').prepend(el);const v=P.list[P.i];
   P.yt=new YT.Player('yt',{videoId:v.key,playerVars:{autoplay:1,controls:0,disablekb:1,fs:0,rel:0,modestbranding:1,iv_load_policy:3,playsinline:1,cc_load_policy:P.ccl==='off'?0:1,cc_lang_pref:P.ccl==='off'?'en':P.ccl,start:Math.floor(st||0)},
   events:{
-    onReady:e=>{const y=e.target;y.setVolume(100);},
+    onReady:e=>{e.target.setVolume(100);},
     onStateChange:e=>{const b=$('#pp');if(b)b.textContent=e.data===1?'⏸':'▶';if(e.data===0&&P.auto)go(1)}
   }});
   P.iv=setInterval(()=>{const y=P.yt,sk=$('#sk');if(!sk||!y||!y.getDuration)return;const d=y.getDuration()||0,c=y.getCurrentTime()||0;if(!P.drag&&d)sk.value=c/d*1000;$('#tm').textContent=fmt(c)+' / '+fmt(d)},400);ui();
@@ -300,11 +295,10 @@ let tm;$('#q').oninput=e=>{clearTimeout(tm);const v=e.target.value.trim();tm=set
  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));$('#subs').style.display='none';
  start(async p=>{const d=await get('/search/multi',{query:v,page:p});return{items:(d.results||[]).filter(r=>r.poster_path&&r.media_type!=='person').map(r=>norm(r)),total:Math.min(d.total_pages||1,10)}},'Results for “'+v+'”');S.q=1},400)};
 
-/* ---- history / back button ---- */
 history.replaceState({b:1},'');let armed=0,hasM=0,leaving=0;
 const arm=()=>{if(!armed){armed=1;history.pushState({g:1},'')}};addEventListener('click',arm,true);addEventListener('keydown',arm,true);
 const pushOv=()=>{if(armed&&!hasM){history.pushState({m:1},'');hasM=1}};
-const anyOpen=()=>$('#m').classList.contains('on')||$('#sht')||$('#mn').classList.contains('on');
+const anyOpen=()=>$('#m').classList.contains('on')||$('#sht')||$('#hp')||$('#mn').classList.contains('on');
 function closeAll(){closeM();closeSheet();$('#mn').classList.remove('on')}
 function done(){const w=hasM;closeAll();if(w){hasM=0;history.back()}}
 function exitAsk(){sheet('<h3>Leave Panther?</h3><p>Do you want to leave our site?</p><div class="btns"><button class="g" id="sx">Stay</button><button id="lv">Leave</button></div>');$('#sx').onclick=closeSheet;$('#lv').onclick=()=>{leaving=1;history.go(-2);setTimeout(()=>{leaving=0;try{window.close()}catch{}},400)}}
@@ -312,7 +306,7 @@ addEventListener('popstate',e=>{const st=e.state||{};if(st.g||st.m){hasM=st.m?1:
  if(leaving)return;
  if(anyOpen())closeAll();else if(nav.length>1){nav.pop();pick(nav[nav.length-1],0,1)}else exitAsk();
  history.pushState({g:1},'');hasM=0});
-/* ---- menu & app bootstrap ---- */
+
 let U=lsg('pu',null);
 const MENU=[['👤','Profile','prof'],['♡','My list','list'],['◐','Appearance','theme'],['⬇','Install app','inst'],['ℹ','About','about']];
 function menuUser(){const u=U||{},n=u.name||'Guest';$('#mn').innerHTML='<div class="mh">'+(u.picture?`<img class="av" src="${esc(u.picture)}" alt="">`:`<span class="av">${esc((n[0]||'P').toUpperCase())}</span>`)+`<div><b>${esc(n)}</b><small>${esc(u.email||'')}</small></div></div>`+MENU.map(m=>`<button class="mi" data-k="${m[2]}"><span>${m[0]}</span>${m[1]}</button>`).join('')}

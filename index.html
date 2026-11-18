@@ -124,205 +124,212 @@ body{overflow-x:hidden}
 <main><h2 id="ttl"></h2><div class="grid" id="grid"></div><div id="more"></div></main>
 <div id="m"><div class="box" id="box"></div></div><div id="mn"></div><div id="au"></div>
 <script>
-const KEY='1eb38c0d10eeba4285205becfaad8792',API='https://api.themoviedb.org/3',IMG='https://image.tmdb.org/t/p/';
-const today=new Date().toISOString().slice(0,10);const ago=n=>new Date(Date.now()-n*864e5).toISOString().slice(0,10);
-const rec=l=>({with_original_language:l,sort_by:'primary_release_date.desc','primary_release_date.lte':today,'vote_count.gte':10});
-const tv=l=>({with_original_language:l,sort_by:'popularity.desc','first_air_date.lte':today});
-const $=s=>document.querySelector(s);
-const get=(p,x={})=>fetch(API+p+'?'+new URLSearchParams({api_key:KEY,language:'en-US',...x})).then(r=>{if(!r.ok)throw 0;return r.json()});
-const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const lsg=(k,d)=>{try{return JSON.parse(localStorage[k])}catch{return d}},lss=(k,v)=>{try{localStorage[k]=JSON.stringify(v)}catch{}};
-const wl=()=>{try{return JSON.parse(localStorage.pw||'[]')}catch{return[]}};
-const norm=(r,t)=>({id:r.id,type:r.media_type||t||(r.name?'tv':'movie'),title:r.title||r.name,poster:r.poster_path,date:(r.release_date||r.first_air_date||'').slice(0,4),vote:r.vote_average,lang:r.original_language,release_date:r.release_date||r.first_air_date});
-const L=(path,x,t)=>async p=>{const d=await get(path,{...x,page:p});return{items:(d.results||[]).filter(r=>r.poster_path&&r.media_type!=='person').map(r=>norm(r,t)),total:Math.min(d.total_pages||1,50)}};
-const M=(path,langs,x,t,key)=>async p=>{const a=await Promise.all(langs.map(l=>get(path,{...x,with_original_language:l,page:p})));
- return{items:a.flatMap(r=>r.results||[]).filter(r=>r.poster_path).sort(key).map(r=>norm(r,t)),total:Math.min(Math.max(...a.map(r=>r.total_pages||1)),30)}};
-const byDate=(a,b)=>(b.release_date||b.first_air_date||'').localeCompare(a.release_date||a.first_air_date||''),byPop=(a,b)=>b.popularity-a.popularity;
-const mov=ls=>M('/discover/movie',ls,{sort_by:'primary_release_date.desc','primary_release_date.lte':today,'vote_count.gte':10},'movie',byDate);
-const drm=ls=>M('/discover/tv',ls,{sort_by:'popularity.desc','first_air_date.lte':today},'tv',byPop);
-const TABS=[
-{id:'trending',label:'Trending',f:L('/trending/all/day',{})},
-{id:'hollywood',label:'Hollywood',subs:[['Popular',L('/movie/popular',{},'movie')],
- ['In theaters',L('/discover/movie',{sort_by:'popularity.desc','primary_release_date.gte':ago(60),'primary_release_date.lte':today,with_release_type:'2|3'},'movie')],
- ['Coming soon',L('/discover/movie',{sort_by:'popularity.desc','primary_release_date.gte':ago(-1),'primary_release_date.lte':ago(-150),with_release_type:'2|3'},'movie')],
- ['Top rated',L('/movie/top_rated',{},'movie')]]},
-{id:'indian',label:'Indian movies',subs:[['All',mov(['hi','ta','te','ml','kn'])],['Hindi',mov(['hi'])],['Tamil',mov(['ta'])],['Telugu',mov(['te'])],['Malayalam',mov(['ml'])],['Kannada',mov(['kn'])]]},
-{id:'ckmovie',label:'Chinese & Korean movies',subs:[['Both',mov(['ko','zh'])],['Korean',mov(['ko'])],['Chinese',mov(['zh'])]]},
-{id:'ckdrama',label:'Chinese & Korean dramas',subs:[['Both',drm(['ko','zh'])],['Korean',drm(['ko'])],['Chinese',drm(['zh'])]]},
-{id:'anime',label:'Anime',f:L('/discover/tv',{...tv('ja'),with_genres:16},'tv')},
-{id:'donghua',label:'Donghua',f:L('/discover/tv',{...tv('zh'),with_genres:16},'tv')},
-{id:'short',label:'Short dramas',f:L('/discover/tv',{sort_by:'popularity.desc','with_runtime.lte':20,with_genres:18,'first_air_date.lte':today,'vote_count.gte':3},'tv')},
-{id:'mylist',label:'My list',f:async()=>({items:wl(),total:1})}];
-const grid=$('#grid'),more=$('#more'),tabsEl=$('#tabs'),ttl=$('#ttl');
-let cur=TABS[0],S=null,pool=[],tok=0;
-tabsEl.innerHTML=TABS.map(t=>`<button class="tab" data-id="${t.id}">${t.label}</button>`).join('');
-const sk=n=>Array.from({length:n},()=>'<div class="c sk"><div class="pw"></div><div class="t"></div></div>').join('');
-
-const card=(i,k)=>{
-  const isComingSoon = i.release_date && i.release_date > today;
-  const tagText = isComingSoon ? 'Coming Soon' : (['hi','ta','te'].includes(i.lang) ? 'Dual Audio' : 'English');
-  return `<div class="c" tabindex="0" data-id="${i.id}" data-t="${i.type}" style="animation-delay:${Math.min(k,12)*35}ms">
-    <div class="pw">
-      ${i.vote?`<span class="rt">★ ${i.vote.toFixed(1)}</span>`:''}
-      <span class="lg${U&&U.langs&&U.langs.includes(i.lang)?' pf':''}">${tagText}</span>
-      <img loading="lazy" src="${IMG}w342${i.poster}" alt="${esc(i.title)}" onload="this.classList.add('ld')">
-      <div class="play-overlay"><div class="play-btn-circle">▶</div></div>
-    </div>
-    <b title="${esc(i.title)}">${esc(i.title)}</b>
-    <small>${i.date||'&nbsp;'}</small>
-  </div>`;
-};
-
-function start(fetcher,title){const my=++tok;S={fetcher,page:0,total:1,busy:false,seen:new Set(),my};pool=[];ttl.textContent=title;grid.innerHTML=sk(18);more.innerHTML='';window.scrollTo({top:0});next()}
-async function next(){const s=S;if(!s||s.busy||s.page>=s.total)return;s.busy=true;
- if(s.page>0)more.innerHTML='<div class="spin"></div>';
- try{const r=await s.fetcher(s.page+1);if(s!==S)return;
-  if(s.page===0)grid.innerHTML='';
-  s.page++;s.total=r.total;
-  const fresh=r.items.filter(i=>{const k=i.type+i.id;if(s.seen.has(k))return false;s.seen.add(k);return true});
-  pool.push(...fresh);grid.insertAdjacentHTML('beforeend',fresh.map((i,k)=>card(i,k)).join(''));
-  if(!pool.length)grid.innerHTML='<p class="empty" style="grid-column:1/-1">'+(cur.id==='mylist'&&!S.q?'Your list is empty. Open any title and tap “Add to my list”.':'Nothing found.')+'</p>';
- }catch(e){if(s!==S)return;if(s.page===0)grid.innerHTML='<p class="empty" style="grid-column:1/-1">Could not load titles. Check your internet connection and try again.</p>';s.total=0}
- s.busy=false;more.innerHTML='';check()}
-function check(){if(S&&!S.busy&&S.page<S.total&&more.getBoundingClientRect().top<innerHeight+700)next()}
-addEventListener('scroll',check,{passive:true});addEventListener('resize',check);
-const nav=[];let sub=0;
-function pick(id,k,keep){cur=TABS.find(t=>t.id===id);sub=k||0;
- document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
- const b=tabsEl.querySelector('.on');b&&b.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
- const sb=$('#subs');sb.innerHTML=cur.subs?cur.subs.map((s,i)=>`<button class="chip${i===sub?' on':''}" data-k="${i}">${s[0]}</button>`).join(''):'';sb.style.display=cur.subs?'flex':'none';
- if(!keep&&nav[nav.length-1]!==id)nav.push(id);
- $('#q').value='';start(cur.subs?cur.subs[sub][1]:cur.f,cur.label+(cur.subs&&sub?' · '+cur.subs[sub][0]:''))}
-$('#subs').onclick=e=>{const b=e.target.closest('.chip');if(b)pick(cur.id,+b.dataset.k,1)};
-tabsEl.onclick=e=>{const b=e.target.closest('.tab');if(b)pick(b.dataset.id)};
-
-const P={on:0,all:[],list:[],i:0,vl:'all',cc:1,ccl:'en',auto:1,dark:1,mu:0,yt:null,iv:0,d:null,ty:'',rate:1,q:'default'};
-const LN={en:'English',hi:'Hindi',bn:'Bengali',ja:'Japanese',ko:'Korean',zh:'Chinese',ta:'Tamil',te:'Telugu',ml:'Malayalam',kn:'Kannada',null:'Other'};
-const RATES=[.5,.75,1,1.25,1.5,2],fmt=s=>{s=Math.floor(s||0);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
-const loadYT=()=>window.YT&&YT.Player?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';window.onYouTubeIframeAPIReady=ok;s.onerror=no;document.head.appendChild(s)});
-
-async function openMedia(id, t) {
-  pushOv();const m=$('#m'),box=$('#box');m.classList.add('on');document.body.style.overflow='hidden';box.innerHTML='<div class="in">Loading...</div>';
-  try {
-    const d=await get(`/${t}/${id}`,{append_to_response:'videos,watch/providers'});
-    const vids = (d.videos?.results||[]).filter(v=>v.site==='YouTube');
-    if(!vids.length) {
-      box.innerHTML=`<div class="in"><h1>${esc(d.title||d.name)}</h1><p>No video source or trailer available.</p><button class="g" id="cl">Close</button></div>`;
-      $('#cl').onclick=close;return;
-    }
-    startPl(d, t, 0, vids);
-  } catch(e) {
-    box.innerHTML='<div class="in">Could not load media. <button id="cl">Close</button></div>';$('#cl').onclick=close;
-  }
-}
-
-function startPl(d, t, idx, vids){
-  P.d=d; P.ty=t; P.all=vids; P.list=vids; P.i=idx||0; P.on=1;
-  box.innerHTML=`<div class="pl" id="pl">
-    <div class="stage"><div id="yt"></div><div class="sh" id="sh"></div></div>
-    <div class="bar"><input type="range" id="sk" min="0" max="1000" value="0" aria-label="Seek"><span id="tm">0:00 / 0:00</span></div>
-    <div class="row">
-      <button class="g" id="pv" title="Previous">⏮ Prev</button>
-      <button id="pp" title="Play/Pause">⏸</button>
-      <button class="g" id="nx" title="Next">Next ⏭</button>
-      <select id="aud-lang" title="Audio Language">
-        <option value="dual">Audio: Dual Audio</option>
-        <option value="en" selected>Audio: English</option>
-        <option value="hi">Audio: Hindi</option>
-      </select>
-      <select id="sub-lang" title="Subtitle Language">
-        <option value="en" selected>Sub: English</option>
-        <option value="bn">Sub: Bengali</option>
-        <option value="hi">Sub: Hindi</option>
-        <option value="off">Sub: Off</option>
-      </select>
-      <button class="g" id="fl" title="Fullscreen">⛶ Fullscreen</button>
-      <button class="g" id="bk">← Details</button>
-      <button class="g" id="cx">✕ Close</button>
-    </div>
-    <div class="pt" id="pt"></div>
-    <div class="pls" id="pls"></div>
-  </div>`;
-
-  const g=(id,fn)=>$('#'+id).onclick=fn;
-  g('sh',tog); g('pp',tog); g('pv',()=>go(-1)); g('nx',()=>go(1)); g('fl',fs); g('cx',close);
-  g('bk',()=>openMedia(d.id, t));
-
-  const sk=$('#sk');
-  sk.oninput=()=>P.drag=1;
-  sk.onchange=()=>{if(P.yt&&P.yt.seekTo){P.yt.seekTo(sk.value/1000*P.yt.getDuration(),true);P.drag=0;sk.blur()}};
-
-  $('#aud-lang').onchange=e=>{e.target.blur()};
-  $('#sub-lang').onchange=e=>{
-    P.ccl=e.target.value;
-    e.target.blur();
+try {
+  const KEY='1eb38c0d10eeba4285205becfaad8792',API='https://api.themoviedb.org/3',IMG='https://image.tmdb.org/t/p/';
+  const today=new Date().toISOString().slice(0,10);const ago=n=>new Date(Date.now()-n*864e5).toISOString().slice(0,10);
+  const tv=l=>({with_original_language:l,sort_by:'popularity.desc','first_air_date.lte':today});
+  const $=s=>document.querySelector(s);
+  const get=(p,x={})=>fetch(API+p+'?'+new URLSearchParams({api_key:KEY,language:'en-US',...x})).then(r=>{if(!r.ok)throw 0;return r.json()});
+  const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const lsg=(k,d)=>{try{return JSON.parse(localStorage[k])}catch{return d}},lss=(k,v)=>{try{localStorage[k]=JSON.stringify(v)}catch{}};
+  const wl=()=>{try{return JSON.parse(localStorage.pw||'[]')}catch{return[]}};
+  const norm=(r,t)=>({id:r.id,type:r.media_type||t||(r.name?'tv':'movie'),title:r.title||r.name,poster:r.poster_path,date:(r.release_date||r.first_air_date||'').slice(0,4),vote:r.vote_average,lang:r.original_language,release_date:r.release_date||r.first_air_date});
+  const L=(path,x,t)=>async p=>{const d=await get(path,{...x,page:p});return{items:(d.results||[]).filter(r=>r.poster_path&&r.media_type!=='person').map(r=>norm(r,t)),total:Math.min(d.total_pages||1,50)}};
+  const M=(path,langs,x,t,key)=>async p=>{const a=await Promise.all(langs.map(l=>get(path,{...x,with_original_language:l,page:p})));
+   return{items:a.flatMap(r=>r.results||[]).filter(r=>r.poster_path).sort(key).map(r=>norm(r,t)),total:Math.min(Math.max(...a.map(r=>r.total_pages||1)),30)}};
+  const byDate=(a,b)=>(b.release_date||b.first_air_date||'').localeCompare(a.release_date||a.first_air_date||''),byPop=(a,b)=>b.popularity-a.popularity;
+  const mov=ls=>M('/discover/movie',ls,{sort_by:'primary_release_date.desc','primary_release_date.lte':today,'vote_count.gte':10},'movie',byDate);
+  const drm=ls=>M('/discover/tv',ls,{sort_by:'popularity.desc','first_air_date.lte':today},'tv',byPop);
+  
+  const TABS=[
+  {id:'trending',label:'Trending',f:L('/trending/all/day',{})},
+  {id:'hollywood',label:'Hollywood',subs:[['Popular',L('/movie/popular',{},'movie')],
+   ['In theaters',L('/discover/movie',{sort_by:'popularity.desc','primary_release_date.gte':ago(60),'primary_release_date.lte':today,with_release_type:'2|3'},'movie')],
+   ['Coming soon',L('/discover/movie',{sort_by:'popularity.desc','primary_release_date.gte':ago(-1),'primary_release_date.lte':ago(-150),with_release_type:'2|3'},'movie')],
+   ['Top rated',L('/movie/top_rated',{},'movie')]]},
+  {id:'indian',label:'Indian movies',subs:[['All',mov(['hi','ta','te','ml','kn'])],['Hindi',mov(['hi'])],['Tamil',mov(['ta'])],['Telugu',mov(['te'])],['Malayalam',mov(['ml'])],['Kannada',mov(['kn'])]]},
+  {id:'ckmovie',label:'Chinese & Korean movies',subs:[['Both',mov(['ko','zh'])],['Korean',mov(['ko'])],['Chinese',mov(['zh'])]]},
+  {id:'ckdrama',label:'Chinese & Korean dramas',subs:[['Both',drm(['ko','zh'])],['Korean',drm(['ko'])],['Chinese',drm(['zh'])]]},
+  {id:'anime',label:'Anime',f:L('/discover/tv',{...tv('ja'),with_genres:16},'tv')},
+  {id:'donghua',label:'Donghua',f:L('/discover/tv',{...tv('zh'),with_genres:16},'tv')},
+  {id:'short',label:'Short dramas',f:L('/discover/tv',{sort_by:'popularity.desc','with_runtime.lte':20,with_genres:18,'first_air_date.lte':today,'vote_count.gte':3},'tv')},
+  {id:'mylist',label:'My list',f:async()=>({items:wl(),total:1})}];
+  
+  const grid=$('#grid'),more=$('#more'),tabsEl=$('#tabs'),ttl=$('#ttl');
+  let cur=TABS[0],S=null,pool=[],tok=0;
+  tabsEl.innerHTML=TABS.map(t=>`<button class="tab" data-id="${t.id}">${t.label}</button>`).join('');
+  const sk=n=>Array.from({length:n},()=>'<div class="c sk"><div class="pw"></div><div class="t"></div></div>').join('');
+  
+  let U=lsg('pu',null);
+  const card=(i,k)=>{
+    const isComingSoon = i.release_date && i.release_date > today;
+    const tagText = isComingSoon ? 'Coming Soon' : (['hi','ta','te'].includes(i.lang) ? 'Dual Audio' : 'English');
+    return `<div class="c" tabindex="0" data-id="${i.id}" data-t="${i.type}" style="animation-delay:${Math.min(k,12)*35}ms">
+      <div class="pw">
+        ${i.vote?`<span class="rt">★ ${i.vote.toFixed(1)}</span>`:''}
+        <span class="lg${U&&U.langs&&U.langs.includes(i.lang)?' pf':''}">${tagText}</span>
+        <img loading="lazy" src="${IMG}w342${i.poster}" alt="${esc(i.title)}" onload="this.classList.add('ld')">
+        <div class="play-overlay"><div class="play-btn-circle">▶</div></div>
+      </div>
+      <b title="${esc(i.title)}">${esc(i.title)}</b>
+      <small>${i.date||'&nbsp;'}</small>
+    </div>`;
   };
-
-  $('#pls').onclick=e=>{const b=e.target.closest('.it');if(b){P.i=+b.dataset.k;mk(0)}};
-  loadYT().then(()=>mk(0)).catch(()=>{$('#pt').textContent='Player could not load.'});
+  
+  function start(fetcher,title){const my=++tok;S={fetcher,page:0,total:1,busy:false,seen:new Set(),my};pool=[];ttl.textContent=title;grid.innerHTML=sk(18);more.innerHTML='';window.scrollTo({top:0});next()}
+  async function next(){const s=S;if(!s||s.busy||s.page>=s.total)return;s.busy=true;
+   if(s.page>0)more.innerHTML='<div class="spin"></div>';
+   try{const r=await s.fetcher(s.page+1);if(s!==S)return;
+    if(s.page===0)grid.innerHTML='';
+    s.page++;s.total=r.total;
+    const fresh=r.items.filter(i=>{const k=i.type+i.id;if(s.seen.has(k))return false;s.seen.add(k);return true});
+    pool.push(...fresh);grid.insertAdjacentHTML('beforeend',fresh.map((i,k)=>card(i,k)).join(''));
+    if(!pool.length)grid.innerHTML='<p class="empty" style="grid-column:1/-1">'+(cur.id==='mylist'&&!S.q?'Your list is empty. Open any title and tap “Add to my list”.':'Nothing found.')+'</p>';
+   }catch(e){if(s!==S)return;if(s.page===0)grid.innerHTML='<p class="empty" style="grid-column:1/-1">Could not load titles. Check your internet connection and try again.</p>';s.total=0}
+   s.busy=false;more.innerHTML='';check()}
+  function check(){if(S&&!S.busy&&S.page<S.total&&more.getBoundingClientRect().top<innerHeight+700)next()}
+  addEventListener('scroll',check,{passive:true});addEventListener('resize',check);
+  const nav=[];let sub=0;
+  function pick(id,k,keep){cur=TABS.find(t=>t.id===id);sub=k||0;
+   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
+   const b=tabsEl.querySelector('.on');b&&b.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+   const sb=$('#subs');sb.innerHTML=cur.subs?cur.subs.map((s,i)=>`<button class="chip${i===sub?' on':''}" data-k="${i}">${s[0]}</button>`).join(''):'';sb.style.display=cur.subs?'flex':'none';
+   if(!keep&&nav[nav.length-1]!==id)nav.push(id);
+   $('#q').value='';start(cur.subs?cur.subs[sub][1]:cur.f,cur.label+(cur.subs&&sub?' · '+cur.subs[sub][0]:''))}
+  $('#subs').onclick=e=>{const b=e.target.closest('.chip');if(b)pick(cur.id,+b.dataset.k,1)};
+  tabsEl.onclick=e=>{const b=e.target.closest('.tab');if(b)pick(b.dataset.id)};
+  
+  const P={on:0,all:[],list:[],i:0,vl:'all',cc:1,ccl:'en',auto:1,dark:1,mu:0,yt:null,iv:0,d:null,ty:'',rate:1,q:'default'};
+  const LN={en:'English',hi:'Hindi',bn:'Bengali',ja:'Japanese',ko:'Korean',zh:'Chinese',ta:'Tamil',te:'Telugu',ml:'Malayalam',kn:'Kannada',null:'Other'};
+  const RATES=[.5,.75,1,1.25,1.5,2],fmt=s=>{s=Math.floor(s||0);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+  const loadYT=()=>window.YT&&YT.Player?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';window.onYouTubeIframeAPIReady=ok;s.onerror=no;document.head.appendChild(s)});
+  
+  async function openMedia(id, t) {
+    pushOv();const m=$('#m'),box=$('#box');m.classList.add('on');document.body.style.overflow='hidden';box.innerHTML='<div class="in">Loading...</div>';
+    try {
+      const d=await get(`/${t}/${id}`,{append_to_response:'videos,watch/providers'});
+      const vids = (d.videos?.results||[]).filter(v=>v.site==='YouTube');
+      if(!vids.length) {
+        box.innerHTML=`<div class="in"><h1>${esc(d.title||d.name)}</h1><p>No video source or trailer available.</p><button class="g" id="cl">Close</button></div>`;
+        $('#cl').onclick=close;return;
+      }
+      startPl(d, t, 0, vids);
+    } catch(e) {
+      box.innerHTML='<div class="in">Could not load media. <button id="cl">Close</button></div>';$('#cl').onclick=close;
+    }
+  }
+  
+  function startPl(d, t, idx, vids){
+    P.d=d; P.ty=t; P.all=vids; P.list=vids; P.i=idx||0; P.on=1;
+    box.innerHTML=`<div class="pl" id="pl">
+      <div class="stage"><div id="yt"></div><div class="sh" id="sh"></div></div>
+      <div class="bar"><input type="range" id="sk" min="0" max="1000" value="0" aria-label="Seek"><span id="tm">0:00 / 0:00</span></div>
+      <div class="row">
+        <button class="g" id="pv" title="Previous">⏮ Prev</button>
+        <button id="pp" title="Play/Pause">⏸</button>
+        <button class="g" id="nx" title="Next">Next ⏭</button>
+        <select id="aud-lang" title="Audio Language">
+          <option value="dual">Audio: Dual Audio</option>
+          <option value="en" selected>Audio: English</option>
+          <option value="hi">Audio: Hindi</option>
+        </select>
+        <select id="sub-lang" title="Subtitle Language">
+          <option value="en" selected>Sub: English</option>
+          <option value="bn">Sub: Bengali</option>
+          <option value="hi">Sub: Hindi</option>
+          <option value="off">Sub: Off</option>
+        </select>
+        <button class="g" id="fl" title="Fullscreen">⛶ Fullscreen</button>
+        <button class="g" id="bk">← Details</button>
+        <button class="g" id="cx">✕ Close</button>
+      </div>
+      <div class="pt" id="pt"></div>
+      <div class="pls" id="pls"></div>
+    </div>`;
+  
+    const g=(id,fn)=>$('#'+id).onclick=fn;
+    g('sh',tog); g('pp',tog); g('pv',()=>go(-1)); g('nx',()=>go(1)); g('fl',fs); g('cx',close);
+    g('bk',()=>openMedia(d.id, t));
+  
+    const sk=$('#sk');
+    sk.oninput=()=>P.drag=1;
+    sk.onchange=()=>{if(P.yt&&P.yt.seekTo){P.yt.seekTo(sk.value/1000*P.yt.getDuration(),true);P.drag=0;sk.blur()}};
+  
+    $('#aud-lang').onchange=e=>{e.target.blur()};
+    $('#sub-lang').onchange=e=>{
+      P.ccl=e.target.value;
+      e.target.blur();
+    };
+  
+    $('#pls').onclick=e=>{const b=e.target.closest('.it');if(b){P.i=+b.dataset.k;mk(0)}};
+    loadYT().then(()=>mk(0)).catch(()=>{$('#pt').textContent='Player could not load.'});
+  }
+  
+  function mk(st){
+    clearInterval(P.iv);try{P.yt&&P.yt.destroy()}catch{}
+    const el=document.createElement('div');el.id='yt';$('#pl .stage').prepend(el);const v=P.list[P.i];
+    P.yt=new YT.Player('yt',{videoId:v.key,playerVars:{autoplay:1,controls:0,disablekb:1,fs:0,rel:0,modestbranding:1,iv_load_policy:3,playsinline:1,cc_load_policy:P.ccl==='off'?0:1,cc_lang_pref:P.ccl==='off'?'en':P.ccl,start:Math.floor(st||0)},
+    events:{
+      onReady:e=>{e.target.setVolume(100);},
+      onStateChange:e=>{const b=$('#pp');if(b)b.textContent=e.data===1?'⏸':'▶';if(e.data===0&&P.auto)go(1)}
+    }});
+    P.iv=setInterval(()=>{const y=P.yt,sk=$('#sk');if(!sk||!y||!y.getDuration)return;const d=y.getDuration()||0,c=y.getCurrentTime()||0;if(!P.drag&&d)sk.value=c/d*1000;$('#tm').textContent=fmt(c)+' / '+fmt(d)},400);ui();
+  }
+  
+  function ui(){
+    const v=P.list[P.i];
+    $('#pt').textContent=(P.d.title||P.d.name)+' — '+v.name+(P.list.length>1?`  (${P.i+1}/${P.list.length})`:'');
+    $('#pls').innerHTML=P.list.map((x,k)=>`<button class="g it${k===P.i?' on':''}" data-k="${k}">${esc(x.type)} · ${esc(x.name)}</button>`).join('');
+    $('#pv').disabled=P.i<=0; $('#nx').disabled=P.i>=P.list.length-1;
+  }
+  
+  function go(n){const k=P.i+n;if(k<0||k>=P.list.length)return;P.i=k;mk(0)}
+  function tog(){const y=P.yt;if(y&&y.getPlayerState)y.getPlayerState()===1?y.pauseVideo():y.playVideo()}
+  function fs(){const e=$('#pl');document.fullscreenElement?document.exitFullscreen():e.requestFullscreen&&e.requestFullscreen()}
+  function stopPl(){P.on=0;clearInterval(P.iv);try{P.yt&&P.yt.destroy()}catch{}P.yt=null;if(document.fullscreenElement)document.exitFullscreen()}
+  
+  function sheet(h){closeSheet();const s=document.createElement('div');s.id='sht';s.innerHTML='<div class="sb">'+h+'</div>';s.onclick=e=>{if(e.target===s)closeSheet()};document.body.appendChild(s)}
+  const closeSheet=()=>{const s=$('#sht');s&&s.remove()};
+  
+  const close=()=>done(),closeM=()=>{stopPl();$('#m').classList.remove('on');document.body.style.overflow='';setTimeout(()=>{if(!$('#m').classList.contains('on'))$('#box').innerHTML=''},300)};
+  $('#m').onclick=e=>{if(e.target.id==='m')close()};
+  
+  grid.onclick=e=>{const c=e.target.closest('.c');if(c&&c.dataset.id)openMedia(c.dataset.id,c.dataset.t)};
+  $('#rnd').onclick=()=>{if(pool.length){const p=pool[Math.floor(Math.random()*pool.length)];openMedia(p.id,p.type)}};
+  
+  let tm;$('#q').oninput=e=>{clearTimeout(tm);const v=e.target.value.trim();tm=setTimeout(()=>{
+   if(!v)return pick(cur.id,sub,1);
+   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));$('#subs').style.display='none';
+   start(async p=>{const d=await get('/search/multi',{query:v,page:p});return{items:(d.results||[]).filter(r=>r.poster_path&&r.media_type!=='person').map(r=>norm(r)),total:Math.min(d.total_pages||1,10)}},'Results for “'+v+'”');S.q=1},400)};
+  
+  history.replaceState({b:1},'');let armed=0,hasM=0,leaving=0;
+  const arm=()=>{if(!armed){armed=1;history.pushState({g:1},'')}};addEventListener('click',arm,true);addEventListener('keydown',arm,true);
+  const pushOv=()=>{if(armed&&!hasM){history.pushState({m:1},'');hasM=1}};
+  const anyOpen=()=>$('#m').classList.contains('on')||$('#sht')||$('#hp')||$('#mn').classList.contains('on');
+  function closeAll(){closeM();closeSheet();$('#mn').classList.remove('on')}
+  function done(){const w=hasM;closeAll();if(w){hasM=0;history.back()}}
+  function exitAsk(){sheet('<h3>Leave Panther?</h3><p>Do you want to leave our site?</p><div class="btns"><button class="g" id="sx">Stay</button><button id="lv">Leave</button></div>');$('#sx').onclick=closeSheet;$('#lv').onclick=()=>{leaving=1;history.go(-2);setTimeout(()=>{leaving=0;try{window.close()}catch{}},400)}}
+  addEventListener('popstate',e=>{const st=e.state||{};if(st.g||st.m){hasM=st.m?1:0;if(!st.m)closeAll();return}
+   if(leaving)return;
+   if(anyOpen())closeAll();else if(nav.length>1){nav.pop();pick(nav[nav.length-1],0,1)}else exitAsk();
+   history.pushState({g:1},'');hasM=0});
+  
+  const MENU=[['👤','Profile','prof'],['♡','My list','list'],['◐','Appearance','theme'],['⬇','Install app','inst'],['ℹ','About','about']];
+  function menuUser(){const u=U||{},n=u.name||'Guest';$('#mn').innerHTML='<div class="mh">'+(u.picture?`<img class="av" src="${esc(u.picture)}" alt="">`:`<span class="av">${esc((n[0]||'P').toUpperCase())}</span>`)+`<div><b>${esc(n)}</b><small>${esc(u.email||'')}</small></div></div>`+MENU.map(m=>`<button class="mi" data-k="${m[2]}"><span>${m[0]}</span>${m[1]}</button>`).join('')}
+  const ACT={
+  prof:()=>{sheet(`<h3>Profile</h3><p>${esc(U?.email||'Guest')}</p><button class="g" id="sx">Close</button>`);$('#sx').onclick=closeSheet},
+  list:()=>pick('mylist'),
+  theme:()=>{lss('pt',document.documentElement.dataset.theme==='dark'?'light':'dark');location.reload()},
+  inst:()=>{},
+  about:()=>{sheet(`<h3>About Panther</h3><p>Stream movies, series & anime directly with multi-language & custom player controls.</p><button class="g" id="sx">Close</button>`);$('#sx').onclick=closeSheet}
+  };
+  $('#dots').onclick=e=>{e.stopPropagation();$('#mn').classList.toggle('on')};
+  document.addEventListener('click',e=>{if(!e.target.closest('#mn'))$('#mn').classList.remove('on')});
+  $('#mn').onclick=e=>{const b=e.target.closest('.mi');if(b){$('#mn').classList.remove('on');ACT[b.dataset.k]()}};
+  menuUser();
+  pick('trending');
+} catch(err) {
+  console.error("App Initialization Error:", err);
+  document.body.innerHTML = '<div style="color:#fff;padding:40px;text-align:center;font-family:sans-serif;"><h2>Something went wrong.</h2><p>Please check your internet connection or try clearing browser cache (Ctrl + F5).</p></div>';
 }
-
-function mk(st){
-  clearInterval(P.iv);try{P.yt&&P.yt.destroy()}catch{}
-  const el=document.createElement('div');el.id='yt';$('#pl .stage').prepend(el);const v=P.list[P.i];
-  P.yt=new YT.Player('yt',{videoId:v.key,playerVars:{autoplay:1,controls:0,disablekb:1,fs:0,rel:0,modestbranding:1,iv_load_policy:3,playsinline:1,cc_load_policy:P.ccl==='off'?0:1,cc_lang_pref:P.ccl==='off'?'en':P.ccl,start:Math.floor(st||0)},
-  events:{
-    onReady:e=>{e.target.setVolume(100);},
-    onStateChange:e=>{const b=$('#pp');if(b)b.textContent=e.data===1?'⏸':'▶';if(e.data===0&&P.auto)go(1)}
-  }});
-  P.iv=setInterval(()=>{const y=P.yt,sk=$('#sk');if(!sk||!y||!y.getDuration)return;const d=y.getDuration()||0,c=y.getCurrentTime()||0;if(!P.drag&&d)sk.value=c/d*1000;$('#tm').textContent=fmt(c)+' / '+fmt(d)},400);ui();
-}
-
-function ui(){
-  const v=P.list[P.i];
-  $('#pt').textContent=(P.d.title||P.d.name)+' — '+v.name+(P.list.length>1?`  (${P.i+1}/${P.list.length})`:'');
-  $('#pls').innerHTML=P.list.map((x,k)=>`<button class="g it${k===P.i?' on':''}" data-k="${k}">${esc(x.type)} · ${esc(x.name)}</button>`).join('');
-  $('#pv').disabled=P.i<=0; $('#nx').disabled=P.i>=P.list.length-1;
-}
-
-function go(n){const k=P.i+n;if(k<0||k>=P.list.length)return;P.i=k;mk(0)}
-function tog(){const y=P.yt;if(y&&y.getPlayerState)y.getPlayerState()===1?y.pauseVideo():y.playVideo()}
-function fs(){const e=$('#pl');document.fullscreenElement?document.exitFullscreen():e.requestFullscreen&&e.requestFullscreen()}
-function stopPl(){P.on=0;clearInterval(P.iv);try{P.yt&&P.yt.destroy()}catch{}P.yt=null;if(document.fullscreenElement)document.exitFullscreen()}
-
-function sheet(h){closeSheet();const s=document.createElement('div');s.id='sht';s.innerHTML='<div class="sb">'+h+'</div>';s.onclick=e=>{if(e.target===s)closeSheet()};document.body.appendChild(s)}
-const closeSheet=()=>{const s=$('#sht');s&&s.remove()};
-
-const close=()=>done(),closeM=()=>{stopPl();$('#m').classList.remove('on');document.body.style.overflow='';setTimeout(()=>{if(!$('#m').classList.contains('on'))$('#box').innerHTML=''},300)};
-$('#m').onclick=e=>{if(e.target.id==='m')close()};
-
-grid.onclick=e=>{const c=e.target.closest('.c');if(c&&c.dataset.id)openMedia(c.dataset.id,c.dataset.t)};
-$('#rnd').onclick=()=>{if(pool.length){const p=pool[Math.floor(Math.random()*pool.length)];openMedia(p.id,p.type)}};
-
-let tm;$('#q').oninput=e=>{clearTimeout(tm);const v=e.target.value.trim();tm=setTimeout(()=>{
- if(!v)return pick(cur.id,sub,1);
- document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));$('#subs').style.display='none';
- start(async p=>{const d=await get('/search/multi',{query:v,page:p});return{items:(d.results||[]).filter(r=>r.poster_path&&r.media_type!=='person').map(r=>norm(r)),total:Math.min(d.total_pages||1,10)}},'Results for “'+v+'”');S.q=1},400)};
-
-history.replaceState({b:1},'');let armed=0,hasM=0,leaving=0;
-const arm=()=>{if(!armed){armed=1;history.pushState({g:1},'')}};addEventListener('click',arm,true);addEventListener('keydown',arm,true);
-const pushOv=()=>{if(armed&&!hasM){history.pushState({m:1},'');hasM=1}};
-const anyOpen=()=>$('#m').classList.contains('on')||$('#sht')||$('#hp')||$('#mn').classList.contains('on');
-function closeAll(){closeM();closeSheet();$('#mn').classList.remove('on')}
-function done(){const w=hasM;closeAll();if(w){hasM=0;history.back()}}
-function exitAsk(){sheet('<h3>Leave Panther?</h3><p>Do you want to leave our site?</p><div class="btns"><button class="g" id="sx">Stay</button><button id="lv">Leave</button></div>');$('#sx').onclick=closeSheet;$('#lv').onclick=()=>{leaving=1;history.go(-2);setTimeout(()=>{leaving=0;try{window.close()}catch{}},400)}}
-addEventListener('popstate',e=>{const st=e.state||{};if(st.g||st.m){hasM=st.m?1:0;if(!st.m)closeAll();return}
- if(leaving)return;
- if(anyOpen())closeAll();else if(nav.length>1){nav.pop();pick(nav[nav.length-1],0,1)}else exitAsk();
- history.pushState({g:1},'');hasM=0});
-
-let U=lsg('pu',null);
-const MENU=[['👤','Profile','prof'],['♡','My list','list'],['◐','Appearance','theme'],['⬇','Install app','inst'],['ℹ','About','about']];
-function menuUser(){const u=U||{},n=u.name||'Guest';$('#mn').innerHTML='<div class="mh">'+(u.picture?`<img class="av" src="${esc(u.picture)}" alt="">`:`<span class="av">${esc((n[0]||'P').toUpperCase())}</span>`)+`<div><b>${esc(n)}</b><small>${esc(u.email||'')}</small></div></div>`+MENU.map(m=>`<button class="mi" data-k="${m[2]}"><span>${m[0]}</span>${m[1]}</button>`).join('')}
-const ACT={
-prof:()=>{sheet(`<h3>Profile</h3><p>${esc(U?.email||'Guest')}</p><button class="g" id="sx">Close</button>`);$('#sx').onclick=closeSheet},
-list:()=>pick('mylist'),
-theme:()=>{lss('pt',document.documentElement.dataset.theme==='dark'?'light':'dark');location.reload()},
-inst:()=>{},
-about:()=>{sheet(`<h3>About Panther</h3><p>Stream movies, series & anime directly with multi-language & custom player controls.</p><button class="g" id="sx">Close</button>`);$('#sx').onclick=closeSheet}
-};
-$('#dots').onclick=e=>{e.stopPropagation();$('#mn').classList.toggle('on')};
-document.addEventListener('click',e=>{if(!e.target.closest('#mn'))$('#mn').classList.remove('on')});
-$('#mn').onclick=e=>{const b=e.target.closest('.mi');if(b){$('#mn').classList.remove('on');ACT[b.dataset.k]()}};
-pick('trending');
 </script></body></html>

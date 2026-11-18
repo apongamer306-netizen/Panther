@@ -48,29 +48,33 @@ h2::before{content:"";width:4px;height:22px;border-radius:2px;background:linear-
 #more{height:60px;display:flex;align-items:center;justify-content:center;color:var(--mut)}
 .spin{width:22px;height:22px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--ac);animation:sp .7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
-#m{position:fixed;inset:0;background:#000c;backdrop-filter:blur(8px);z-index:50;overflow:auto;padding:4vw;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+#m{position:fixed;inset:0;background:#000c;backdrop-filter:blur(12px);z-index:50;overflow:auto;padding:2vw;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
 #m.on{opacity:1;visibility:visible}
-.box{max-width:900px;margin:auto;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px #000;transform:translateY(24px) scale(.98);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.box{max-width:1000px;margin:auto;background:#0b0f17;border:1px solid #1f2a36;border-radius:12px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.8),0 0 40px rgba(240,179,90,0.08);transform:translateY(24px) scale(.98);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 #m.on .box{transform:none}
-.bd{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}.box iframe{width:100%;aspect-ratio:16/9;border:0;display:block}
-.in{padding:22px 26px 28px}.in h1{font:600 32px Oswald,Impact,sans-serif;margin:0 0 4px}.meta{color:var(--mut);margin-bottom:12px}
-.btns{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.wh{color:var(--mut)}.wh a{color:var(--ac)}
+.bd{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
+
+/* PotPlayer Style Video Player Frame */
+.potplayer-container{background:#090d14;border:1px solid #1c2633;border-radius:8px;overflow:hidden;box-shadow:inset 0 0 20px rgba(0,0,0,0.9)}
+.potplayer-header{display:flex;align-items:center;justify-content:between;background:#111823;padding:8px 14px;border-bottom:1px solid #1c2633;font-size:13px;color:#94a3b8}
+.potplayer-screen{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+.potplayer-screen iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.potplayer-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;background:#0d131d;border-top:1px solid #1c2633}
+.pot-btn{background:#16202e;color:#e2e8f0;border:1px solid #243346;padding:6px 14px;font-size:12.5px;border-radius:6px;font-weight:500}
+.pot-btn.active{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#111;border-color:transparent;font-weight:700}
+.ep-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 14px;background:#0d131d;border-top:1px solid #1c2633;font-size:13px}
+.ep-bar select,.ep-bar input{background:#16202e;color:var(--tx);border:1px solid #243346;border-radius:6px;padding:5px 10px;font:inherit}
+.ep-bar input{width:70px}
+
+.in{padding:20px 24px 24px}.in h1{font:600 28px Oswald,Impact,sans-serif;margin:0 0 4px}.meta{color:var(--mut);margin-bottom:10px;font-size:14px}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}.wh{color:var(--mut);font-size:13px}
 @media(max-width:620px){.top{flex-wrap:wrap}#q{order:4;max-width:none;flex:1 1 100%;margin:0}#rnd{margin-right:auto}.dots{order:1}.brand{order:3;margin-left:auto}.grid{grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:16px 10px}.logo{font-size:22px}h2{font-size:20px}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-/* CodeSpecters NexStream Embed Styles */
-.stream-wrap{background:#000;border-bottom:1px solid var(--line)}
-.stream-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000}
-.stream-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.ep-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 18px;background:var(--card);border-bottom:1px solid var(--line);font-size:13px}
-.ep-bar select,.ep-bar input{background:var(--card2);color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font:inherit}
-.ep-bar input{width:75px}
-
+/* Original YouTube Trailer Player Theme */
 .pl{--pbg:#05070a;background:var(--pbg);color:var(--tx)}
 .pl.light{--pbg:#f4f6f9;--tx:#111;--card:#fff;--card2:#e8edf3;--line:#ccd5de;--mut:#556}
 .stage{position:relative;aspect-ratio:16/9;background:#000}.stage iframe,.stage #yt{position:absolute;inset:0;width:100%;height:100%;border:0}
 .sh{position:absolute;inset:0;z-index:2;cursor:pointer}
-.pl:fullscreen{display:flex;flex-direction:column;overflow:auto}.pl:fullscreen .stage{flex:1;aspect-ratio:auto;min-height:50vh}
 .bar{display:flex;gap:10px;align-items:center;padding:10px 16px 0}.bar input{flex:1;accent-color:var(--ac)}.bar span{font-size:13px;color:var(--mut);min-width:90px;text-align:right}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 16px;font-size:13px}.row button{padding:7px 14px}.row button.on{border-color:var(--ac);color:var(--ac)}
 .row select{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:99px;padding:7px 10px;font:inherit;font-size:13px}
@@ -82,7 +86,6 @@ h2::before{content:"";width:4px;height:22px;border-radius:2px;background:linear-
 .hb div{display:flex;justify-content:space-between;gap:14px;padding:6px 0;border-bottom:1px solid var(--line)}.hb button{margin-top:14px}
 kbd{background:var(--card2);border:1px solid var(--line);border-radius:6px;padding:1px 8px;font:600 13px monospace;white-space:nowrap}
 @media(max-width:620px){#kb{display:none}}
-
 html[data-theme=light]{--bg:#f3f5f8;--card:#fff;--card2:#e9edf2;--line:#d6dde5;--tx:#121820;--mut:#5a6878;--hd:#f3f5f8d9;--glow:#f0b35a40}
 body{overflow-x:hidden}
 .dots{width:46px;height:46px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border-radius:14px;flex:none}
@@ -183,53 +186,71 @@ function pick(id,k,keep){cur=TABS.find(t=>t.id===id);sub=k||0;
  const sb=$('#subs');sb.innerHTML=cur.subs?cur.subs.map((s,i)=>`<button class="chip${i===sub?' on':''}" data-k="${i}">${s[0]}</button>`).join(''):'';sb.style.display=cur.subs?'flex':'none';
  if(!keep&&nav[nav.length-1]!==id)nav.push(id);
  $('#q').value='';start(cur.subs?cur.subs[sub][1]:cur.f,cur.label+(cur.subs&&sub?' · '+cur.subs[sub][0]:''))}
-$('#subs').onclick=e=>{const b=e.target.closest('.chip');if(b)pick(cur.id,+b.dataset.k,1)};
+$('#subs').onclick=e=>{const b=e.target.closest('.chip');if(b>=-1)pick(cur.id,+b.dataset.k,1)};
 tabsEl.onclick=e=>{const b=e.target.closest('.tab');if(b)pick(b.dataset.id)};
 
-/* ---- CodeSpecters NexStream Streaming Integration ---- */
-const CS_API_KEY = 'nx_0f03baf111747cdbc36f74641c5a472b'; // Your updated API Key
+/* ---- PotPlayer Style Multi-Server Streaming Integration ---- */
+const STREAM_SERVERS = [
+  { name: 'Server 1 (AutoEmbed)', url: (t, id, s, e) => t === 'movie' ? `https://player.autoembed.cc/embed/movie/${id}` : `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}` },
+  { name: 'Server 2 (VidSrc)', url: (t, id, s, e) => t === 'movie' ? `https://vidsrc.cc/v2/embed/movie/${id}` : `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` },
+  { name: 'Server 3 (MultiEmbed)', url: (t, id, s, e) => t === 'movie' ? `https://multiembed.mov/?tmdb=1&video_id=${id}` : `https://multiembed.mov/?tmdb=1&video_id=${id}&s=${s}&e=${e}` },
+  { name: 'Server 4 (VidLink)', url: (t, id, s, e) => t === 'movie' ? `https://vidlink.pro/movie/${id}` : `https://vidlink.pro/tv/${id}/${s}/${e}` }
+];
 
-function startStream(d, t, season = 1, episode = 1) {
+function startStream(d, t, srvIdx = 0, season = 1, episode = 1) {
   stopPl();
   const box = $('#box');
   const title = d.title || d.name;
   const maxSeasons = d.number_of_seasons || 1;
-  
-  // NexStream API URL structure based on official docs
-  const streamUrl = t === 'movie' 
-    ? `https://api.codespecters.com/embed/movie/${d.id}?apikey=${CS_API_KEY}`
-    : `https://api.codespecters.com/embed/tv/${d.id}/${season}/${episode}?apikey=${CS_API_KEY}`;
+  const currentUrl = STREAM_SERVERS[srvIdx].url(t, d.id, season, episode);
 
   box.innerHTML = `
-    <div class="stream-wrap">
-      <div class="stream-frame">
-        <iframe src="${streamUrl}" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+    <div class="potplayer-container">
+      <div class="potplayer-header">
+        <span><b>PANTHER Media Player</b> — ${esc(title)} ${t === 'tv' ? `(S${season} E${episode})` : ''}</span>
+        <span style="color:var(--ac);font-size:12px">● LIVE STREAM</span>
+      </div>
+      <div class="potplayer-screen">
+        <iframe src="${currentUrl}" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="origin"></iframe>
+      </div>
+      <div class="potplayer-toolbar">
+        <span style="font-size:12.5px;color:var(--mut);font-weight:600;margin-right:4px">Servers:</span>
+        ${STREAM_SERVERS.map((s, idx) => `<button class="pot-btn${idx === srvIdx ? ' active' : ''}" data-srv="${idx}">${s.name}</button>`).join('')}
       </div>
       ${t === 'tv' ? `
       <div class="ep-bar">
         <label>Season: <input type="number" id="st-s" min="1" max="${maxSeasons}" value="${season}"></label>
         <label>Episode: <input type="number" id="st-e" min="1" max="999" value="${episode}"></label>
-        <button id="st-go" style="padding:6px 14px;font-size:13px">Load Episode</button>
+        <button class="pot-btn active" id="st-go" style="padding:5px 12px">Load Episode</button>
       </div>` : ''}
     </div>
     <div class="in">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-        <h1 style="font-size:24px;margin:0">${esc(title)} ${t === 'tv' ? `(S${season} E${episode})` : ''}</h1>
+        <h1 style="font-size:22px;margin:0">${esc(title)}</h1>
         <div style="display:flex;gap:8px">
           <button class="g" id="bk-det">← Details</button>
           <button class="g" id="cx-st">✕ Close</button>
         </div>
       </div>
-      <p style="color:var(--mut);font-size:13px;margin:10px 0 0">💡 Powered by CodeSpecters NexStream API. Select episodes or switch audio/subtitles directly inside the video player.</p>
+      <p style="color:var(--mut);font-size:13px;margin:8px 0 0">💡 Tip: If any server shows loading errors or ads, simply switch to another server from the toolbar above.</p>
     </div>`;
 
   $('#cx-st').onclick = close;
   $('#bk-det').onclick = () => open(d.id, t);
+  
+  document.querySelectorAll('.pot-btn[data-srv]').forEach(btn => {
+    btn.onclick = () => {
+      const sVal = t === 'tv' ? Math.max(1, +$('#st-s').value || 1) : 1;
+      const eVal = t === 'tv' ? Math.max(1, +$('#st-e').value || 1) : 1;
+      startStream(d, t, +btn.dataset.srv, sVal, eVal);
+    };
+  });
+
   if (t === 'tv') {
     $('#st-go').onclick = () => {
       const sVal = Math.max(1, +$('#st-s').value || 1);
       const eVal = Math.max(1, +$('#st-e').value || 1);
-      startStream(d, t, sVal, eVal);
+      startStream(d, t, srvIdx, sVal, eVal);
     };
   }
 }
@@ -244,11 +265,11 @@ box.innerHTML=`${d.backdrop_path?`<img class="bd" src="${IMG}w1280${d.backdrop_p
 <div class="meta">${(d.release_date||d.first_air_date||'').slice(0,4)} · ★ ${(d.vote_average||0).toFixed(1)} · ${(d.genres||[]).map(g=>esc(g.name)).join(', ')}${d.runtime?' · '+d.runtime+' min':''}${d.number_of_seasons?' · '+d.number_of_seasons+' seasons':''}</div>
 <div>${(d.spoken_languages||[]).some(l=>l.iso_639_1==='hi')?'<span class="lc on">✓ Hindi available</span>':''}${(d.spoken_languages||[]).some(l=>l.iso_639_1==='en')?'<span class="lc on">✓ English available</span>':''}${(d.spoken_languages||[]).map(l=>`<span class="lc">${esc(l.english_name)}</span>`).join('')}</div><p>${esc(d.overview)||'No summary yet.'}</p>
 <div class="btns"><button id="watch-now">🎬 Watch Full ${t==='tv'?'Series':'Movie'}</button>${tr?`<button class="g" id="tr">▶ Watch Trailer</button>`:''}<button class="g" id="sv">${saved?'Remove from my list':'Add to my list'}</button><button class="g" id="cl">Close</button></div>
-<div class="wh">${names.length?'Official platforms: '+[...new Set(names)].map(esc).join(', ')+(reg.link?` · <a href="${reg.link}" target="_blank" rel="noopener">See all options</a>`:''):'Stream ready via NexStream API.'}</div></div>`;
+<div class="wh">${names.length?'Official platforms: '+[...new Set(names)].map(esc).join(', ')+(reg.link?` · <a href="${reg.link}" target="_blank" rel="noopener">See all options</a>`:''):'Multi-server streaming ready.'}</div></div>`;
 $('#cl').onclick=close;$('#sv').onclick=()=>{let w=wl();const k=w.findIndex(x=>x.id==id&&x.type==t);k>=0?w.splice(k,1):w.push(norm(d,t));try{localStorage.pw=JSON.stringify(w)}catch{}open(id,t);if(cur.id==='mylist'&&!S.q)start(cur.f,cur.label)};
-$('#watch-now').onclick=()=>startStream(d,t,1,1);
+$('#watch-now').onclick=()=>startStream(d,t,0,1,1);
 if(tr)$('#tr').onclick=()=>startPl(d,t,0);
-}catch(e){box.innerHTML='<div class="in">Could not load details. <button id="cl">Close</button></div>';$('#cl').onclick=close}}
+}catch(e){box.innerHTML='<div class="in">Could not load details. <button id="cl">Close</button></div>';$('#cl'].onclick=close}}
 const close=()=>done(),closeM=()=>{stopPl();$('#m').classList.remove('on');document.body.style.overflow='';setTimeout(()=>{if(!$('#m').classList.contains('on'))$('#box').innerHTML=''},300)};
 $('#m').onclick=e=>{if(e.target.id==='m')close()};
 document.onkeydown=e=>{if(plKey(e))return;if(e.key==='Escape')close();if(e.key==='Enter'&&e.target.classList?.contains('c'))e.target.click()};
@@ -311,7 +332,7 @@ function spd(d){const k=Math.max(0,Math.min(RATES.length-1,RATES.indexOf(P.rate)
 function stopPl(){P.on=0;clearInterval(P.iv);try{P.yt&&P.yt.destroy()}catch{}P.yt=null;if(document.fullscreenElement)document.exitFullscreen()}
 function plKey(e){const k=e.key,tg=e.target;if(tg.tagName==='INPUT'&&tg.type==='search')return 0;
  if(k==='?'){help();return 1}
- if(k==='Escape'&&$('#sht')){closeSheet();return 1}if($('#hp')){if(k==='Escape')$('#hp').remove();return 1}
+ if(k==='Escape'&&$('#sht')){closeSheet();return 1}if($('#hp')){if(k==='Escape')$('#hp'.remove());return 1}
  if(!P.on||!P.yt||!P.yt.getPlayerState||tg.tagName==='SELECT')return 0;
  const y=P.yt,K=k.toLowerCase();let h=1;
  if(k===' '||K==='k')tog();else if(K==='j')skip(-10);else if(K==='l')skip(10);else if(k==='ArrowLeft')skip(-5);else if(k==='ArrowRight')skip(5);else if(k==='ArrowUp')vol(10);else if(k==='ArrowDown')vol(-10);else if(K==='m')mute();else if(K==='f')fs();else if(K==='c')cc();else if(K==='n')go(1);else if(K==='p')go(-1);else if(K==='t')theme();else if(K==='a'){P.auto^=1;$('#au').checked=!!P.auto}else if(k===',')spd(-1);else if(k==='.')spd(1);else if(/^[0-9]$/.test(k))y.seekTo(y.getDuration()*k/10,true);else h=0;
@@ -341,7 +362,7 @@ const GCLIENT='';/* paste your Google OAuth Web Client ID here to enable Google 
 let U=lsg('pu',null);
 const MENU=[['👤','Profile','prof'],['♡','My list','list'],['◐','Appearance','theme'],['⬇','Install app','inst'],['⌨','Keyboard shortcuts','kbd'],['🗑','Clear my list','clr'],['ℹ','About & privacy','about'],['⎋','Sign out','out']];
 function menuUser(){const u=U||{},n=u.name||'Guest';$('#mn').innerHTML='<div class="mh">'+(u.picture?`<img class="av" src="${esc(u.picture)}" alt="" referrerpolicy="no-referrer">`:`<span class="av">${esc((n[0]||'P').toUpperCase())}</span>`)+`<div><b>${esc(n)}</b><small>${esc(u.email||'')}</small></div></div>`+MENU.map(m=>`<button class="mi" data-k="${m[2]}"><span>${m[0]}</span>${m[1]}</button>`).join('')}
-const X=()=>{$('#sx'.onclick=closeSheet)};
+const X=()=>{$('#sx').onclick=closeSheet};
 const ACT={
 prof:()=>{const u=U||{};sheet(`<h3>Profile</h3><p>${esc(u.email||'')} ${u.verified?'<span class="vb">✓ Verified by Google</span>':''}</p><span class="lc on">@${esc(u.username||'guest')}</span><span class="lc">${esc(u.country||'—')}</span><div class="btns"><button id="ed">Edit details</button><button class="g" id="sx">Close</button></div>`);X();$('#ed').onclick=()=>{closeSheet();au.classList.remove('out');authForm()}},
 list:()=>pick('mylist'),

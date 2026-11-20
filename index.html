@@ -11,20 +11,20 @@
 html{scroll-behavior:smooth}
 body{margin:0;background:radial-gradient(900px 420px at 15% -5%,#f0b35a14,transparent 70%),radial-gradient(800px 400px at 95% 0,#2a7fff12,transparent 70%),var(--bg);background-attachment:fixed;color:var(--tx);font:15px/1.5 system-ui,Segoe UI,Roboto,sans-serif;min-height:100vh}
 header{position:sticky;top:0;z-index:20;background:var(--hd);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);border-bottom:1px solid var(--line)}
-.top{display:flex;gap:14px;align-items:center;padding:8px 3vw}.navrow{display:flex;align-items:center;gap:8px;flex:1;min-width:0}.scr{display:flex;align-items:center;gap:8px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;padding:2px 0}.scr::-webkit-scrollbar{display:none}
+.top{display:flex;gap:12px;align-items:center;padding:5px 3vw}.navrow{display:flex;align-items:center;gap:8px;flex:1;min-width:0}.scr{display:flex;align-items:center;gap:8px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;padding:2px 0}.scr::-webkit-scrollbar{display:none}
 .brand{display:flex;align-items:center;gap:10px;flex:none}
-.brand img{width:30px;height:30px;border-radius:8px;box-shadow:0 0 0 1px var(--line),0 0 18px var(--glow)}
-.logo{font:600 22px Oswald,Impact,sans-serif;letter-spacing:2px;background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
-#q{flex:none;width:200px;font-size:13px;background:var(--card);border:1px solid var(--line);color:var(--tx);padding:6px 14px;border-radius:99px;outline:0;transition:border-color .2s,box-shadow .2s}
-#q:focus{width:260px;border-color:var(--ac);box-shadow:0 0 0 4px var(--glow)}
+.brand img{width:24px;height:24px;border-radius:6px;box-shadow:0 0 0 1px var(--line),0 0 18px var(--glow)}
+.logo{font:500 18px Oswald,Impact,sans-serif;letter-spacing:1.5px;background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+#q{flex:none;width:180px;font-size:12.5px;background:var(--card);border:1px solid var(--line);color:var(--tx);padding:3px 12px;height:28px;border-radius:99px;outline:0;transition:border-color .2s,box-shadow .2s}
+#q:focus{width:230px;border-color:var(--ac);box-shadow:0 0 0 4px var(--glow)}
 button{font:inherit;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#111;border:0;border-radius:99px;padding:9px 18px;font-weight:600;cursor:pointer;transition:transform .15s,box-shadow .2s,filter .2s}
 button:hover{transform:translateY(-1px);box-shadow:0 6px 20px var(--glow)}button:active{transform:scale(.97)}
 button.g{background:var(--card);color:var(--tx);border:1px solid var(--line)}button.g:hover{border-color:var(--ac);box-shadow:none}
 button:focus-visible,.c:focus-visible,.tab:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
 
-.tabs{display:flex;gap:6px;flex:none}
+.tabs{display:flex;gap:5px;flex:none}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:none;background:var(--card);color:var(--mut);border:1px solid var(--line);padding:5px 12px;border-radius:99px;font-weight:500;font-size:13px;box-shadow:none;transition:all .2s;white-space:nowrap}.tab svg{display:block}.tab.hm{padding:5px 10px}
+.tab{flex:none;background:var(--card);color:var(--mut);border:1px solid var(--line);padding:3px 11px;border-radius:99px;font-weight:400;font-size:12.5px;line-height:1.5;box-shadow:none;transition:all .2s;white-space:nowrap}.tab svg{display:block}.tab.hm{padding:5px 10px}
 .tab:hover{color:var(--tx);border-color:#33465a;transform:none;box-shadow:none}
 .tab.on{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#111;border-color:transparent;box-shadow:0 4px 18px var(--glow);font-weight:600}
 main{padding:6px 4vw 70px}
@@ -64,11 +64,11 @@ h2::before{content:"";width:4px;height:22px;border-radius:2px;background:linear-
 
 .in{padding:20px 24px 24px}.in h1{font:600 28px Oswald,Impact,sans-serif;margin:0 0 4px}.meta{color:var(--mut);margin-bottom:10px;font-size:14px}
 .btns{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}.wh{color:var(--mut);font-size:13px}
-@media(max-width:620px){.top{flex-wrap:wrap;gap:4px}.navrow{flex:1 1 100%}.grid{grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:16px 10px}.logo{font-size:22px}h2{font-size:20px}}
+@media(max-width:620px){.top{flex-wrap:wrap;gap:2px}.brand{order:-1;margin-left:auto}.navrow{flex:1 1 100%}.grid{grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:16px 10px}.logo{font-size:22px}h2{font-size:20px}}
 html[data-theme=light]{--bg:#f3f5f8;--card:#fff;--card2:#e9edf2;--line:#d6dde5;--tx:#121820;--mut:#5a6878;--hd:#f3f5f8d9}
 body{overflow-x:hidden}
-.dots{width:38px;height:38px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border-radius:14px;flex:none}
-.dots span{display:block;width:18px;height:2.5px;background:var(--ac);border-radius:3px;transition:transform .2s}
+.dots{width:30px;height:30px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-radius:10px;flex:none}
+.dots span{display:block;width:14px;height:1.5px;background:var(--ac);border-radius:3px;transition:transform .2s}
 .dots:hover span{background:var(--ac2)}
 #mn{position:fixed;top:68px;left:4vw;z-index:30;min-width:250px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px;box-shadow:0 20px 60px #0007;opacity:0;visibility:hidden;transform:translateY(-8px) scale(.97);transform-origin:top left;transition:all .2s}
 #mn.on{opacity:1;visibility:visible;transform:none}
@@ -164,11 +164,11 @@ body{overflow-x:hidden}
 </style></head><body>
 <header>
 <div class="top">
-  <div class="brand"><img src="icon-192.png" alt=""><span class="logo">PANTHER</span></div>
   <div class="navrow">
     <button class="g dots" id="dots" aria-label="Menu" aria-haspopup="true"><span></span><span></span><span></span></button>
     <div class="scr" id="scr"><nav class="tabs" id="tabs"></nav><input id="q" type="search" placeholder="Search" aria-label="Search"></div>
   </div>
+  <div class="brand" id="brand" role="link" tabindex="0" aria-label="Panther home" style="cursor:pointer"><span class="logo">PANTHER</span><img src="icon-192.png" alt=""></div>
 </div>
 <div class="subs" id="subs" style="display:none"></div>
 </header>
@@ -211,7 +211,7 @@ try {
   
   const grid=$('#grid'),more=$('#more'),tabsEl=$('#tabs'),ttl=$('#ttl');
   let cur=TABS[0],S=null,pool=[],tok=0;
-  tabsEl.innerHTML=TABS.map(t=>`<button class="tab${t.icon?' hm':''}" data-id="${t.id}"${t.icon?` aria-label="${t.label}" title="${t.label}"`:''}>${t.icon||t.label}</button>`).join('');
+  tabsEl.innerHTML=TABS.filter(t=>!t.icon).map(t=>`<button class="tab${t.icon?' hm':''}" data-id="${t.id}"${t.icon?` aria-label="${t.label}" title="${t.label}"`:''}>${t.icon||t.label}</button>`).join('');
   const sk=n=>Array.from({length:n},()=>'<div class="c sk"><div class="pw"></div><div class="t"></div></div>').join('');
   
   let U=lsg('pu',null);
@@ -271,6 +271,7 @@ try {
    if(!keep&&nav[nav.length-1]!==id)nav.push(id);
    $('#q').value='';start(cur.subs?cur.subs[sub][1]:cur.f,cur.label+(cur.subs&&sub?' · '+cur.subs[sub][0]:''))}
   $('#subs').onclick=e=>{const b=e.target.closest('.chip');if(b)pick(cur.id,+b.dataset.k,1)};
+  $('#brand').onclick=()=>pick('home');$('#brand').onkeydown=e=>{if(e.key==='Enter')pick('home')};
   tabsEl.onclick=e=>{const b=e.target.closest('.tab');if(b)pick(b.dataset.id)};
   
   const P={on:0,all:[],list:[],i:0,vl:'all',cc:1,ccl:'en',auto:1,dark:1,mu:0,yt:null,iv:0,d:null,ty:'',rate:1,q:'default',vol:100,it:0,tab:'ep'};
